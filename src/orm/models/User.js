@@ -16,6 +16,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(60),
       field: "email",
     },
+    password: {
+      allowNull: false,
+      type: DataTypes.STRING(60),
+      field: "password",
+    },
+    role: {
+      allowNull: true,
+      type: DataTypes.STRING(60),
+      field: "role"
+    },
     isActive: {
       allowNull: true,
       type: DataTypes.TINYINT,

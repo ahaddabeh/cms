@@ -23,6 +23,16 @@ module.exports = {
         type: Sequelize.STRING(60),
         field: "email",
       },
+      password: {
+        allowNull: false,
+        type: Sequelize.STRING(60),
+        field: "password",
+      },
+      role: {
+        allowNull: true,
+        type: Sequelize.STRING(60),
+        field: "role"
+      },
       isActive: {
         allowNull: true,
         type: Sequelize.TINYINT,
