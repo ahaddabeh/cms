@@ -14,6 +14,17 @@ module.exports = {
         field: "history_id",
         defaultValue: 0
       },
+      contentTypeId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        field: "content_type_id"
+      },
+      categoryId: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+        field: "category_id",
+        defaultValue: 0
+      },
       title: {
         allowNull: false,
         type: Sequelize.STRING(60),
@@ -43,6 +54,17 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
         field: "updated_by",
+      },
+      isPermanent: {
+        allowNull: true,
+        type: Sequelize.TINYINT,
+        field: "is_permanent",
+        defaultValue: 0
+      },
+      publishedOn: {
+        allowNull: true,
+        type: Sequelize.DATE,
+        field: "published_on"
       },
       createdAt: {
         allowNull: false,

@@ -7,6 +7,17 @@ module.exports = (sequelize, DataTypes) => {
       field: "history_id",
       defaultValue: 0
     },
+    contentTypeId: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+      field: "content_type_id"
+    },
+    categoryId: {
+      allowNull: true,
+      type: DataTypes.INTEGER,
+      field: "category_id",
+      defaultValue: 0
+    },
     title: {
       allowNull: false,
       type: DataTypes.STRING(60),
@@ -36,6 +47,17 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.INTEGER,
       field: "updated_by",
+    },
+    isPermanent: {
+      allowNull: true,
+      type: DataTypes.TINYINT,
+      field: "is_permanent",
+      defaultValue: 0
+    },
+    publishedOn: {
+      allowNull: true,
+      type: DataTypes.DATE,
+      field: "published_on"
     }
   }, {
     tableName: "content",
