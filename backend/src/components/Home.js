@@ -1,4 +1,4 @@
-const User = () => {
+const Home = () => {
     return (
         <Fragment>
             <h1>
@@ -8,4 +8,4 @@ const User = () => {
     )
 }
 
-export default User;
+export default Home;

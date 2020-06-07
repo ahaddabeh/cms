@@ -55,6 +55,8 @@ const createContent = (title, directory, slug, contentTypeId, categoryId, option
     }
 }
 
+
+
 OUTPUT.content_types = [
     { id: 1, title: "Page", description: faker.lorem.sentence() },
     { id: 2, title: "Category", description: faker.lorem.sentence() },
