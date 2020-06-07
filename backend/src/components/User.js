@@ -1,8 +1,9 @@
+import React, { Fragment } from "react";
 const User = () => {
     return (
         <Fragment>
             <h1>
-                Welcome
+                User
             </h1>
         </Fragment>
     )

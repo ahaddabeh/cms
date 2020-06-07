@@ -53,19 +53,19 @@ const routes = [
     {
         path: "/pages/:id",
         exact: true,
-        component: Content,
+        component: ContentDetails,
         fetchPage: async (id) => await fetchOne(`/api/pages/${id}`)
     },
     {
         path: "/categories/:id",
         exact: true,
-        component: Content,
+        component: ContentDetails,
         fetchCategory: async (id) => await fetchOne(`/api/categories/${id}`)
     },
     {
         path: "/tags/:id",
         exact: true,
-        component: Content,
+        component: ContentDetails,
         fetchTag: async (id) => await fetchOne(`/api/tags/${id}`)
     },
     {
@@ -75,3 +75,5 @@ const routes = [
         fetchTag: async (id) => await fetchOne(`/api/users/${id}`)
     }
 ]
+
+export default routes;

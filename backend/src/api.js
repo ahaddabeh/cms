@@ -1,4 +1,4 @@
-const data = require("../output.json");
+const data = require("../../output.json");
 
 console.log(data.content.filter(it => it.contentTypeId === 1));
 
@@ -36,9 +36,9 @@ export const fetchAll = async (url, params, method = "get") => {
 
 export const fetchOne = async (url, params = {}, method = "get") => {
     const tempUrl = url.split('/');
-    const id = +tempUrl[3];
+    const id = +tempUrl[tempUrl.length - 1];
     const singleUser = findUser(users, id);
-    switch (tempUrl[2]) {
+    switch (tempUrl[tempUrl.length - 2]) {
         case "pages":
             return getPage()
         case "categories":

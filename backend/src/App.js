@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import routes from './routes';
-import NoMatch from './components/NoMatch';
+import NoMatch from './components/ui/NoMatch';
 import Layout from './components/ui/Layout';
 
 const App = () => {
