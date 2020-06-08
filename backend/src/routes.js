@@ -24,7 +24,7 @@ const routes = [
         component: Content,
         navlabel: "Pages",
         navorder: 1,
-        fetchPages: async (params = {}) => await fetchAll("/api/pages", params)
+        fetchContent: async (params = {}) => await fetchAll("/api/pages", params)
     },
     {
         path: "/categories",
@@ -32,7 +32,7 @@ const routes = [
         component: Content,
         navlabel: "Categories",
         navorder: 2,
-        fetchCategories: async (params = {}) => await fetchAll("/api/categories", params)
+        fetchContent: async (params = {}) => await fetchAll("/api/categories", params)
     },
     {
         path: "/tags",
@@ -40,7 +40,7 @@ const routes = [
         component: Content,
         navlabel: "Tags",
         navorder: 3,
-        fetchPages: async (params = {}) => await fetchAll("/api/tags", params)
+        fetchContent: async (params = {}) => await fetchAll("/api/tags", params)
     },
     {
         path: "/users",
@@ -72,7 +72,7 @@ const routes = [
         path: "/users/:id",
         exact: true,
         component: User,
-        fetchTag: async (id) => await fetchOne(`/api/users/${id}`)
+        fetchUser: async (id) => await fetchOne(`/api/users/${id}`)
     }
 ]
 
