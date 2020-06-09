@@ -6,21 +6,21 @@ const listGroupStyle = {
 
 const determineContentType = (id) => {
     if (+id === 1) {
-        return "pages";
+        return "Pages";
     }
     else if (+id === 2) {
-        return "categories";
+        return "Pategories";
     }
     else if (+id === 3) {
-        return "tags";
+        return "Tags";
     }
     return 0;
 }
 
 //Find out why tf the stupid map function isnt working
-const displayContent = (contentArray) => {
+const displayContent = (contentArray, contentType) => {
     return (contentArray.map((cont) =>
-        <li key={`${cont.title}_${cont.subtitle}_${cont.id}`} className="list-group-item">
+        <Link to={`/${contentType}/${cont.id}`}><li key={`${cont.title}_${cont.subtitle}_${cont.id}`} className="list-group-item">
             <div className="row mx-auto">
                 <div className="col-9">
                     <div className="row mx-auto">
@@ -35,27 +35,35 @@ const displayContent = (contentArray) => {
                     <p>a year ago</p>
                 </div>
             </div>
-        </li>)
+        </li>
+        </Link>)
     )
 
 }
 
 
 const Content = (props) => {
-    const [content, setContent] = useState({});
+    const [content, setContent] = useState([]);
+    const titleHeader = props.navlabel.slice(0, props.navlabel.length - 1);
     console.log(props);
     const updateContent = async () => {
         const data = await props.fetchContent();
         setContent(data);
+
     }
     useEffect(() => {
         updateContent()
     }, [props.history.location.search])
     return (
         <Fragment>
-            <h1>
-                Content
-        </h1>
+            <div className="row wrapper border-bottom info-bg page-heading m-4">
+                <div className="col">
+                    <h2>{props.navlabel}</h2>
+                </div>
+                <div className="row mx-auto">
+                    <button className="btn btn-sm btn-success">New {titleHeader}</button>
+                </div>
+            </div>
             <div className="d-flex justify-content-center">
                 <ul className="list-group" style={listGroupStyle}>
                     <li className="list-group-item bg-info">
@@ -69,7 +77,7 @@ const Content = (props) => {
                             </div>
                         </div>
                     </li>
-                    {displayContent(content)}
+                    {displayContent(content, props.navlabel.toLowerCase())}
                 </ul>
             </div>
             {console.log(content)}

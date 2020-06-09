@@ -3,12 +3,39 @@ const data = require("../../output.json");
 console.log(data.content.filter(it => it.contentTypeId === 1));
 
 const getContent = (type) => data.content.filter(it => it.contentTypeId === +type);
+
 const getPages = () => getContent(1);
-const getPage = (id) => getPages.filter(page => page.id === +id)
+const getPage = (id) => {
+    const pagesArr = getPages();
+    for (let i = 0; i < pagesArr.length; i++) {
+        if (pagesArr[i].id === +id) {
+            return pagesArr[i];
+        }
+    }
+    return {};
+}
+
 const getCategories = () => getContent(2);
-const getCategory = (id) => getCategories.filter(category => category.id === +id);
+const getCategory = (id) => {
+    const categoriesArr = getCategories();
+    for (let i = 0; i < categoriesArr.length; i++) {
+        if (categoriesArr[i].id === +id) {
+            return categoriesArr[i];
+        }
+    }
+    return {};
+}
+
 const getTags = () => getContent(3);
-const getTag = (id) => getTags.filter(tag => tag.id === +id);
+const getTag = (id) => {
+    const tagsArr = getTags();
+    for (let i = 0; i < tagsArr.length; i++) {
+        if (tagsArr[i].id === +id) {
+            return tagsArr[i];
+        }
+    }
+    return {};
+}
 
 const users = data.users;
 // only two users so lets wait till it gets more complex and we generate more data
@@ -40,11 +67,11 @@ export const fetchOne = async (url, params = {}, method = "get") => {
     const singleUser = findUser(users, id);
     switch (tempUrl[tempUrl.length - 2]) {
         case "pages":
-            return getPage()
+            return getPage(id)
         case "categories":
-            return getCategory()
+            return getCategory(id)
         case "tags":
-            return getTag()
+            return getTag(id)
         case "users":
             return singleUser
     }
