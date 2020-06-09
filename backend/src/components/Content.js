@@ -44,7 +44,7 @@ const displayContent = (contentArray, contentType) => {
 
 const Content = (props) => {
     const [content, setContent] = useState([]);
-    const titleHeader = props.navlabel.slice(0, props.navlabel.length - 1);
+
     console.log(props);
     const updateContent = async () => {
         const data = await props.fetchContent();
@@ -58,10 +58,10 @@ const Content = (props) => {
         <Fragment>
             <div className="row wrapper border-bottom info-bg page-heading m-4">
                 <div className="col">
-                    <h2>{props.navlabel}</h2>
+                    <h2>{props.labels.plural}</h2>
                 </div>
                 <div className="row mx-auto">
-                    <button className="btn btn-sm btn-success">New {titleHeader}</button>
+                    <button className="btn btn-sm btn-success">New {props.labels.singular}</button>
                 </div>
             </div>
             <div className="d-flex justify-content-center">
@@ -77,7 +77,7 @@ const Content = (props) => {
                             </div>
                         </div>
                     </li>
-                    {displayContent(content, props.navlabel.toLowerCase())}
+                    {displayContent(content, props.labels.plural.toLowerCase())}
                 </ul>
             </div>
             {console.log(content)}

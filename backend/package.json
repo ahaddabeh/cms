@@ -13,9 +13,14 @@
   "dependencies": {
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
+    "emotion": "^10.0.27",
+    "is-hotkey": "^0.1.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
+    "slate": "^0.58.3",
+    "slate-history": "^0.58.3",
+    "slate-react": "^0.58.3",
     "validator": "^13.0.0"
   },
   "devDependencies": {
