@@ -45,6 +45,21 @@ module.exports = {
         type: Sequelize.STRING(60),
         field: "slug"
       },
+      directory: {
+        allowNull: false,
+        type: Sequelize.STRING(60),
+        field: "directory"
+      },
+      layout: {
+        allowNull: true,
+        type: Sequelize.STRING(60),
+        field: "layout",
+      },
+      view: {
+        allowNull: true,
+        type: Sequelize.STRING(60),
+        field: "view",
+      },
       createdBy: {
         allowNull: false,
         type: Sequelize.INTEGER,

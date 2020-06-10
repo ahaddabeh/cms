@@ -38,6 +38,21 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(60),
       field: "slug"
     },
+    directory: {
+      allowNull: false,
+      type: DataTypes.STRING(60),
+      field: "directory"
+    },
+    layout: {
+      allowNull: true,
+      type: DataTypes.STRING(60),
+      field: "layout",
+    },
+    view: {
+      allowNull: true,
+      type: DataTypes.STRING(60),
+      field: "view",
+    },
     createdBy: {
       allowNull: false,
       type: DataTypes.INTEGER,
