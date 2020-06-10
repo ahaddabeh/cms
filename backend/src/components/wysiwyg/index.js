@@ -23,33 +23,38 @@ const RichTextExample = ({ initialValue }) => {
 
     return (
         <Slate editor={editor} value={value} onChange={value => setValue(value)}>
-            <Toolbar>
-                <MarkButton format="bold" icon="format_bold" />
-                <MarkButton format="italic" icon="format_italic" />
-                <MarkButton format="underline" icon="format_underlined" />
-                <MarkButton format="code" icon="code" />
-                <BlockButton format="heading-one" icon="looks_one" />
-                <BlockButton format="heading-two" icon="looks_two" />
-                <BlockButton format="block-quote" icon="format_quote" />
-                <BlockButton format="numbered-list" icon="format_list_numbered" />
-                <BlockButton format="bulleted-list" icon="format_list_bulleted" />
-            </Toolbar>
-            <Editable
-                renderElement={renderElement}
-                renderLeaf={renderLeaf}
-                placeholder="Enter some rich text…"
-                spellCheck
-                autoFocus
-                onKeyDown={event => {
-                    for (const hotkey in HOTKEYS) {
-                        if (isHotkey(hotkey, event)) {
-                            event.preventDefault()
-                            const mark = HOTKEYS[hotkey]
-                            toggleMark(editor, mark)
-                        }
-                    }
-                }}
-            />
+            <div className="card m-3">
+                <div className="card-header">
+                    <Toolbar>
+                        <MarkButton format="bold" />
+                        <MarkButton format="italic" />
+                        <MarkButton format="underline" />
+                        <MarkButton format="code" />
+                        <BlockButton format="heading" />
+                        <BlockButton format="quote-right" />
+                        <BlockButton format="list-ol" />
+                        <BlockButton format="list" />
+                    </Toolbar>
+                </div>
+                <div className="card-body">
+                    <Editable
+                        renderElement={renderElement}
+                        renderLeaf={renderLeaf}
+                        placeholder="Enter some rich text…"
+                        spellCheck
+                        autoFocus
+                        onKeyDown={event => {
+                            for (const hotkey in HOTKEYS) {
+                                if (isHotkey(hotkey, event)) {
+                                    event.preventDefault()
+                                    const mark = HOTKEYS[hotkey]
+                                    toggleMark(editor, mark)
+                                }
+                            }
+                        }}
+                    />
+                </div>
+            </div>
         </Slate>
     )
 }
@@ -150,7 +155,7 @@ const _BlockButton = ({ format, icon }) => {
     )
 }
 
-const BlockButton = ({ format, icon }) => {
+const BlockButton = ({ format }) => {
     const editor = useSlate()
     return (
         <Button
@@ -160,7 +165,7 @@ const BlockButton = ({ format, icon }) => {
                 toggleBlock(editor, format)
             }}
         >
-            <Icon />
+            <Icon iconChoice={format} />
         </Button>
     )
 }
@@ -180,7 +185,7 @@ const _MarkButton = ({ format, icon }) => {
     )
 }
 
-const MarkButton = ({ format, icon }) => {
+const MarkButton = ({ format }) => {
     const editor = useSlate()
     return (
         <Button
@@ -190,7 +195,7 @@ const MarkButton = ({ format, icon }) => {
                 toggleMark(editor, format)
             }}
         >
-            <Icon />
+            <Icon iconChoice={format} />
         </Button>
     )
 }

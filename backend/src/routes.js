@@ -58,6 +58,7 @@ const routes = [
         exact: true,
         component: ContentDetails,
         contentType: "pages",
+        labels: { plural: "Pages", singular: "Page" },
         fetchDetails: async (id) => await fetchOne(`/api/pages/${id}`)
     },
     {
@@ -65,6 +66,7 @@ const routes = [
         exact: true,
         component: ContentDetails,
         contentType: "categories",
+        labels: { plural: "Categories", singular: "Category" },
         fetchDetails: async (id) => await fetchOne(`/api/categories/${id}`)
     },
     {
@@ -72,6 +74,7 @@ const routes = [
         exact: true,
         component: ContentDetails,
         contentType: "tags",
+        labels: { plural: "Tags", singular: "Tag" },
         fetchDetails: async (id) => await fetchOne(`/api/tags/${id}`)
     },
     {
