@@ -26,14 +26,16 @@ const RichTextExample = ({ initialValue }) => {
             <div className="card m-3">
                 <div className="card-header">
                     <Toolbar>
-                        <MarkButton format="bold" />
-                        <MarkButton format="italic" />
-                        <MarkButton format="underline" />
-                        <MarkButton format="code" />
-                        <BlockButton format="heading" />
-                        <BlockButton format="quote-right" />
-                        <BlockButton format="list-ol" />
-                        <BlockButton format="list" />
+                        <MarkButton format="bold" icon="bold" />
+                        <MarkButton format="italic" icon="italic" />
+                        <MarkButton format="underline" icon="underline" />
+                        <MarkButton format="code" icon="code" />
+                        <BlockButton format="heading-one" icon="heading" />
+                        <BlockButton format="heading-two" icon="heading-two" />
+                        <BlockButton format="heading-three" icon="heading-three" />
+                        <BlockButton format="blockquote" icon="quote-right" />
+                        <BlockButton format="numbered-list" icon="list-ol" />
+                        <BlockButton format="bulleted-list" icon="list" />
                     </Toolbar>
                 </div>
                 <div className="card-body">
@@ -155,7 +157,7 @@ const _BlockButton = ({ format, icon }) => {
     )
 }
 
-const BlockButton = ({ format }) => {
+const BlockButton = ({ format, icon }) => {
     const editor = useSlate()
     return (
         <Button
@@ -165,7 +167,7 @@ const BlockButton = ({ format }) => {
                 toggleBlock(editor, format)
             }}
         >
-            <Icon iconChoice={format} />
+            <Icon iconChoice={icon} />
         </Button>
     )
 }
@@ -185,7 +187,7 @@ const _MarkButton = ({ format, icon }) => {
     )
 }
 
-const MarkButton = ({ format }) => {
+const MarkButton = ({ format, icon }) => {
     const editor = useSlate()
     return (
         <Button
@@ -195,7 +197,7 @@ const MarkButton = ({ format }) => {
                 toggleMark(editor, format)
             }}
         >
-            <Icon iconChoice={format} />
+            <Icon iconChoice={icon} />
         </Button>
     )
 }

@@ -167,35 +167,8 @@ const ContentDetails = (props) => {
         <Fragment>
             <div className="row mx-auto">
                 <div className="col-9">
-                    <div className="row mx-auto">
-                        <div className="col"></div>
-                        <div className="col dropdown d-flex justify-content-end">
-                            <button className="btn btn-secondary dropdown-toggle" type="button"
-                                id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                                Screen Options
-                                    </button>
-                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <a className="dropdown-item" href="#">Action</a>
-                                <a className="dropdown-item" href="#">Another action</a>
-                                <a className="dropdown-item" href="#">Something else here</a>
-                            </div>
-                            <button className="btn btn-secondary dropdown-toggle" type="button"
-                                id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                                Help
-                                    </button>
-                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                                <a className="dropdown-item" href="#">Action</a>
-                                <a className="dropdown-item" href="#">Another action</a>
-                                <a className="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <button className="btn btn-light btn-sm border">Edit {props.labels.singular}</button>
-                        <button className="btn btn-light btn-sm border">Add New</button>
-                    </div>
+
+
                     <h1 className="my-3">{contentDetails.title}</h1>
                     <p className="text-muted mb-2"><strong>Permalink: </strong>http://10.0.1.138:8888/slate/?p=1
                                 <span>
