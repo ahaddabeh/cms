@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Pagination from "./ui/Pagination";
 const listGroupStyle = {
     width: "90%"
 }
@@ -28,10 +29,16 @@ const displayUsers = (users) => {
 
 const Users = (props) => {
     const [users, setUsers] = useState([]);
+    const [recordCount, setRecordCount] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
     console.log(props);
     const updateUsers = async () => {
-        const data = await props.fetchUsers();
+        const searchString = new URLSearchParams(props.history.location.search);
+        const _currentPage = searchString.get("page") || 1;
+        const data = await props.fetchUsers({ page: _currentPage });
         setUsers(data);
+        setRecordCount(data.length);
+        setCurrentPage(_currentPage);
     }
     useEffect(() => {
         updateUsers()
@@ -57,6 +64,9 @@ const Users = (props) => {
                     </li>
                     {displayUsers(users)}
                 </ul>
+            </div>
+            <div className="row mx-auto d-flex justify-content-center">
+                <Pagination type="users" total={recordCount} currentPage={currentPage} />
             </div>
         </Fragment >
     )
