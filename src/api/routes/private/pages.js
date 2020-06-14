@@ -1,5 +1,5 @@
 const express = require("express");
-const { ContentController } = require("../..controllers");
+const { ContentController } = require("../../controllers");
 const injectContentType = require("../../middleware/injectContentType");
 const { PAGES } = require("../../../constants");
 const router = express.Router();

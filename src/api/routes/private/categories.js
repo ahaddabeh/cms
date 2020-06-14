@@ -1,8 +1,9 @@
 const express = require("express");
-const { ContentController } = require("../..controllers");
+const { ContentController } = require("../../controllers");
 const injectContentType = require("../../middleware/injectContentType");
 const { CATEGORIES } = require("../../../constants");
 const router = express.Router();
+
 
 // List all
 router.get("/", injectContentType(CATEGORIES), ContentController.list);
