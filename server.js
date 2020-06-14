@@ -20,6 +20,8 @@ app.get("/", (req, res) => {
     res.send("It's working...");
 })
 
+
+
 // in the require, we are essentially pulling all the routes declared in the router
 app.use("/api/users", require("./src/api/routes/private/users"));
 app.use("/api/pages", require("./src/api/routes/private/pages"));
