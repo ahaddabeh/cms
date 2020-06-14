@@ -4,7 +4,9 @@ const User = (props) => {
     const [user, setUser] = useState({});
     const updateUser = async () => {
         const data = await props.fetchUser(props.match.params.id);
-        setUser(data);
+        //dump data to see how you can find the id or what you need
+        console.log(data);
+        setUser(data.data);
     }
     useEffect(() => {
         updateUser();
