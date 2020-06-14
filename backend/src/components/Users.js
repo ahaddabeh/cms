@@ -22,7 +22,7 @@ const displayUsers = (users) => {
             </div>
         </div>
     </li>
-    </Link >
+    </Link>
     )
 }
 
@@ -36,13 +36,17 @@ const Users = (props) => {
         const searchString = new URLSearchParams(props.history.location.search);
         const _currentPage = searchString.get("page") || 1;
         const data = await props.fetchUsers({ page: _currentPage });
-        setUsers(data);
-        setRecordCount(data.length);
+        console.log("This is data", data);
+        setUsers(data.data.rows);
+        setRecordCount(data.data.count);
         setCurrentPage(_currentPage);
     }
     useEffect(() => {
         updateUsers()
     }, [props.history.location.search])
+    if (users && !users.length) {
+        return <h1>Loading...</h1>
+    }
     return (
         <Fragment>
             <div className="row wrapper border-bottom info-bg page-heading m-4">
