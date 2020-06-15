@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");
 const handlebars = require("express-handlebars"); // I think
+const { nextTick } = require("process");
 
 require("dotenv").config();
 
@@ -21,7 +22,11 @@ app.get("/", (req, res) => {
 })
 
 
-
+// Authentication middleware will go here
+// app.use((req, res, next) => {
+//     console.log("Authenticated routes");
+//     next();
+// })
 // in the require, we are essentially pulling all the routes declared in the router
 app.use("/api/users", require("./src/api/routes/private/users"));
 app.use("/api/pages", require("./src/api/routes/private/pages"));
