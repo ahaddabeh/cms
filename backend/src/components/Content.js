@@ -47,14 +47,18 @@ const Content = (props) => {
     const [content, setContent] = useState([]);
     const [recordCount, setRecordCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
+    const [size, setSize] = useState(25);
     console.log(props);
     const updateContent = async () => {
         const searchString = new URLSearchParams(props.history.location.search);
-        const _currentPage = searchString.get("page") || 1;
-        const data = await props.fetchContent({ page: _currentPage });
-        setContent(data);
-        setRecordCount(data.length);
+        const _currentPage = +searchString.get("page") || 1;
+        const _size = +searchString.get("size") || 25;
+        const data = await props.fetchContent({ page: _currentPage, size: _size });
+        console.log("This is the content", data);
+        setContent(data.data.rows);
+        setRecordCount(data.data.count);
         setCurrentPage(_currentPage);
+        setSize(_size);
     }
     useEffect(() => {
         updateContent()
@@ -87,7 +91,7 @@ const Content = (props) => {
             </div>
 
             <div className="row mx-auto d-flex justify-content-center">
-                <Pagination type={props.labels.plural} total={recordCount} currentPage={currentPage} />
+                <Pagination type={props.labels.plural.toLowerCase()} size={size} total={recordCount} currentPage={currentPage} />
             </div>
             {console.log(content)}
         </Fragment>
