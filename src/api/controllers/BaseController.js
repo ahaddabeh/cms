@@ -10,7 +10,7 @@ class BaseController {
             where: { ...where, ..._where },
             include,
             order: [[sort, order]],
-            limit: size,
+            limit: +size,
             offset: size * (page - 1),
             ..._options
         }
