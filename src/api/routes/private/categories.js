@@ -10,10 +10,10 @@ router.get("/", injectContentType(CATEGORIES), ContentController.list);
 // Retrieve one
 router.get("/:id", injectContentType(CATEGORIES), ContentController.read);
 // Update one
-router.patch("/:id", injectContentType(CATEGORIES), ContentController.update);
+router.patch("/:id", ContentController.update);
 // Delete one
-router.delete("/:id", injectContentType(CATEGORIES), ContentController.delete);
+router.delete("/:id", ContentController.delete);
 // Create one
-router.post("/", injectContentType(CATEGORIES), ContentController.list);
+router.post("/", ContentController.create);
 
 module.exports = router;

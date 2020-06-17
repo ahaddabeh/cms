@@ -5,9 +5,13 @@ import ContentType from "./components/ContentType";
 import ContentDetails from "./components/ContentDetails";
 import Content from "./components/Content";
 import NoMatch from "./components/ui/NoMatch";
+import ContentForm from "./components/ui/ContentForm";
+import UserForm from "./components/ui/UserForm";
 import {
-    fetchAll,
-    fetchOne
+    _fetchAll,
+    _fetchOne,
+    save,
+    _delete
 } from "./api";
 
 const routes = [
@@ -25,7 +29,8 @@ const routes = [
         labels: { plural: "Pages", singular: "Page" },
         navlabel: "Pages",
         navorder: 1,
-        fetchContent: async (params = {}) => await fetchAll("/api/pages", params)
+        fetchContent: async (params = {}) => await _fetchAll("/api/pages", params),
+        deleteContent: async (id) => await _delete(`/api/pages/${id}`)
     },
     {
         path: "/categories",
@@ -34,7 +39,7 @@ const routes = [
         labels: { plural: "Categories", singular: "Category" },
         navlabel: "Categories",
         navorder: 2,
-        fetchContent: async (params = {}) => await fetchAll("/api/categories", params)
+        fetchContent: async (params = {}) => await _fetchAll("/api/categories", params)
     },
     {
         path: "/tags",
@@ -43,7 +48,7 @@ const routes = [
         labels: { plural: "Tags", singular: "Tag" },
         navlabel: "Tags",
         navorder: 3,
-        fetchContent: async (params = {}) => await fetchAll("/api/tags", params)
+        fetchContent: async (params = {}) => await _fetchAll("/api/tags", params)
     },
     {
         path: "/users",
@@ -51,38 +56,37 @@ const routes = [
         component: Users,
         navlabel: "Users",
         navorder: 4,
-        fetchUsers: async (params = {}) => await fetchAll("/api/users", params)
+        fetchUsers: async (params = {}) => await _fetchAll("/api/users", params)
     },
     {
-        path: "/pages/:id",
+        path: ["/page", "/page/:id"],
         exact: true,
-        component: ContentDetails,
-        contentType: "pages",
-        labels: { plural: "Pages", singular: "Page" },
-        fetchDetails: async (id) => await fetchOne(`/api/pages/${id}`)
+        component: ContentForm,
+        saveContent: async (data, method = "post") => await _save("/api/pages", data, method),
+        fetchDetails: async (id) => await _fetchOne(`/api/pages/${id}`)
     },
     {
-        path: "/categories/:id",
+        path: ["/category", "/category/:id"],
         exact: true,
-        component: ContentDetails,
-        contentType: "categories",
-        labels: { plural: "Categories", singular: "Category" },
-        fetchDetails: async (id) => await fetchOne(`/api/categories/${id}`)
+        component: ContentForm,
+        saveContent: async (data, method = "post") => await _save("/api/categories", data, method),
+        fetchDetails: async (id) => await _fetchOne(`/api/categories/${id}`)
     },
     {
-        path: "/tags/:id",
+        path: ["/tag", "/tag/:id"],
         exact: true,
-        component: ContentDetails,
-        contentType: "tags",
-        labels: { plural: "Tags", singular: "Tag" },
-        fetchDetails: async (id) => await fetchOne(`/api/tags/${id}`)
+        component: ContentForm,
+        saveContent: async (data, method = "post") => await _save("/api/tags", data, method),
+        fetchDetails: async (id) => await _fetchOne(`/api/tags/${id}`)
     },
     {
-        path: "/users/:id",
+        path: ["/user", "/user/:id"],
         exact: true,
-        component: User,
-        fetchUser: async (id) => await fetchOne(`/api/users/${id}`)
-    }
+        component: UserForm,
+        saveUser: async (data, method = "post") => await _save("/api/users", data, method),
+        fetchDetails: async (id) => await _fetchOne(`/api/users/${id}`)
+    },
+
 ]
 
 export default routes;

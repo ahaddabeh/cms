@@ -157,7 +157,8 @@ const ContentDetails = (props) => {
     console.log(props);
     const updateContentDetails = async () => {
         const data = await props.fetchDetails(props.match.params.id);
-        setContentDetails(data);
+        console.log("This is content details", data);
+        setContentDetails(data.data);
     }
     useEffect(() => {
         updateContentDetails();

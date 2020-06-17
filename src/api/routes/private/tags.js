@@ -9,10 +9,10 @@ router.get("/", injectContentType(TAGS), ContentController.list);
 // Retrieve one
 router.get("/:id", injectContentType(TAGS), ContentController.read);
 // Update one
-router.patch("/:id", injectContentType(TAGS), ContentController.update);
+router.patch("/:id", ContentController.update);
 // Delete one
-router.delete("/:id", injectContentType(TAGS), ContentController.delete);
+router.delete("/:id", ContentController.delete);
 // Create one
-router.post("/", injectContentType(TAGS), ContentController.list);
+router.post("/", ContentController.create);
 
 module.exports = router;

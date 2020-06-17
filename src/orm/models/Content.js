@@ -43,6 +43,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(60),
       field: "directory"
     },
+    filepath: {
+      allowNull: true,
+      type: DataTypes.STRING(120),
+      field: "filepath"
+    },
     layout: {
       allowNull: true,
       type: DataTypes.STRING(60),
@@ -83,5 +88,10 @@ module.exports = (sequelize, DataTypes) => {
   Content.associate = function (models) {
     // associations can be defined here
   };
+  Content.addHook("beforeSave", (instance, options) => {
+    instance.title = instance.title.replace(/\b[a-zA-z]/g, match => match.toUpperCase());
+    instance.slug = `${instance.title.replace(/\s+/g, "-").toLowerCase()}`
+    instance.filepath = instance.directory + "/" + instance.slug;
+  });
   return Content;
 };

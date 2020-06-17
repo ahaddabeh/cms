@@ -1,19 +1,25 @@
 import axios from "axios";
 
-export const fetchAll = async (url, params, method = "get") => {
+export const _fetchAll = async (url, params, method = "get") => {
     return await axios({
         method, url: `http://localhost:3500${url}`, params
     })
 }
 
-export const fetchOne = async (url, params = {}, method = "get") => {
+export const _fetchOne = async (url, params = {}, method = "get") => {
     return await axios({
         method, url: `http://localhost:3500${url}`, params
     })
 }
 
+export const _delete = async (url) => {
+    return await axios({
+        method: "delete",
+        url: `http://localhost:3500${url}`
+    })
+}
 
-export const save = async (url, data, method = "post") => {
+export const _save = async (url, data, method = "post") => {
     return await axios({
         method, url: `http://localhost:3500${url}`, data,
         headers: {
@@ -21,6 +27,8 @@ export const save = async (url, data, method = "post") => {
         }
     })
 }
+
+
 
 
 

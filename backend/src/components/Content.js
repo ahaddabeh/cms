@@ -18,7 +18,6 @@ const determineContentType = (id) => {
     return 0;
 }
 
-//Find out why tf the stupid map function isnt working
 const displayContent = (contentArray, contentType) => {
     return (contentArray.map((cont) =>
         <Link to={`/${contentType}/${cont.id}`}><li key={`${cont.title}_${cont.subtitle}_${cont.id}`} className="list-group-item">
@@ -70,7 +69,7 @@ const Content = (props) => {
                     <h2>{props.labels.plural}</h2>
                 </div>
                 <div className="row mx-auto">
-                    <button className="btn btn-sm btn-success">New {props.labels.singular}</button>
+                    <Link to={`/${props.labels.singular.toLowerCase()}`}><button className="btn btn-sm btn-success">New {props.labels.singular}</button></Link>
                 </div>
             </div>
             <div className="d-flex justify-content-center">
@@ -86,7 +85,7 @@ const Content = (props) => {
                             </div>
                         </div>
                     </li>
-                    {displayContent(content, props.labels.plural.toLowerCase())}
+                    {displayContent(content, props.labels.singular.toLowerCase())}
                 </ul>
             </div>
 

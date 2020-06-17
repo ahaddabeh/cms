@@ -37,7 +37,7 @@ class BaseController {
         try {
             const { where = null, ..._options } = req.options || {}
             const options = { where: { ...where, id: req.params.id }, ..._options };
-            return { status: 200, result: await this.model.destroy(options) }
+            return { status: 200, result: { count: await this.model.destroy(options) } }
         } catch (error) {
             console.log(error);
             return { status: 404, result: "Not found" };
@@ -56,6 +56,7 @@ class BaseController {
     }
 
     create = async (req, res) => {
+        console.log(req.body);
         const result = await this._create(req, res);
         await res.status(result.status).send(result.result);
     }
@@ -76,7 +77,9 @@ class BaseController {
     }
 
     delete = async (req, res) => {
+        console.log(req.params);
         const result = await this._destroy(req, res);
+        console.log("Results of delete", result);
         await res.status(result.status).send(result.result);
     }
 

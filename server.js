@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");
 const handlebars = require("express-handlebars"); // I think
-const { nextTick } = require("process");
+
 
 require("dotenv").config();
 
@@ -36,3 +36,4 @@ app.use("/api/content", require("./src/api/routes/private/content"));
 app.use("/api/content-types", require("./src/api/routes/private/contentTypes"));
 
 app.listen(PORT, HOST, () => console.log(`JSON app is running on port::http://${HOST}:${PORT}`))
+

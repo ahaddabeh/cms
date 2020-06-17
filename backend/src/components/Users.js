@@ -6,7 +6,7 @@ const listGroupStyle = {
 }
 
 const displayUsers = (users) => {
-    return users.map((user) => <Link to={`/users/${user.id}`}> <li key={`${user.firstName}_${user.lastName}_${user.id}`} className="list-group-item">
+    return users.map((user) => <Link to={`/user/${user.id}`}> <li key={`${user.firstName}_${user.lastName}_${user.id}`} className="list-group-item">
         <div className="row mx-auto">
             <div className="col-9">
                 <div className="row mx-auto">
@@ -50,8 +50,12 @@ const Users = (props) => {
     return (
         <Fragment>
             <div className="row wrapper border-bottom info-bg page-heading m-4">
-                <h2>Users</h2>
-
+                <div className="col">
+                    <h2>Users</h2>
+                </div>
+                <div className="row mx-auto">
+                    <Link to="/user"><button className="btn btn-sm btn-success">New User</button></Link>
+                </div>
             </div>
             <div className="d-flex justify-content-center">
                 <ul className="list-group" style={listGroupStyle}>

@@ -50,6 +50,11 @@ module.exports = {
         type: Sequelize.STRING(60),
         field: "directory"
       },
+      filepath: {
+        allowNull: true,
+        type: Sequelize.STRING(120),
+        field: "filepath"
+      },
       layout: {
         allowNull: true,
         type: Sequelize.STRING(60),
