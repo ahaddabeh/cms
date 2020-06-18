@@ -39,7 +39,8 @@ const routes = [
         labels: { plural: "Categories", singular: "Category" },
         navlabel: "Categories",
         navorder: 2,
-        fetchContent: async (params = {}) => await _fetchAll("/api/categories", params)
+        fetchContent: async (params = {}) => await _fetchAll("/api/categories", params),
+        deleteContent: async (id) => await _delete(`/api/categories/${id}`)
     },
     {
         path: "/tags",
@@ -48,7 +49,8 @@ const routes = [
         labels: { plural: "Tags", singular: "Tag" },
         navlabel: "Tags",
         navorder: 3,
-        fetchContent: async (params = {}) => await _fetchAll("/api/tags", params)
+        fetchContent: async (params = {}) => await _fetchAll("/api/tags", params),
+        deleteContent: async (id) => await _delete(`/api/tags/${id}`)
     },
     {
         path: "/users",
@@ -56,7 +58,8 @@ const routes = [
         component: Users,
         navlabel: "Users",
         navorder: 4,
-        fetchUsers: async (params = {}) => await _fetchAll("/api/users", params)
+        fetchUsers: async (params = {}) => await _fetchAll("/api/users", params),
+        deleteUser: async (id) => await _delete(`/api/users/${id}`)
     },
     {
         path: ["/page", "/page/:id"],
