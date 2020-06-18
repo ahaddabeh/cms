@@ -18,25 +18,28 @@ const determineContentType = (id) => {
     return 0;
 }
 
-const displayContent = (contentArray, contentType) => {
+const displayContent = (contentArray, contentType, deleteFunction) => {
+
     return (contentArray.map((cont) =>
-        <Link to={`/${contentType}/${cont.id}`}><li key={`${cont.title}_${cont.subtitle}_${cont.id}`} className="list-group-item">
+        <li key={`${cont.title}_${cont.subtitle}_${cont.id}`} className="list-group-item">
             <div className="row mx-auto">
-                <div className="col-9">
+                <div className="col-7">
                     <div className="row mx-auto">
-                        <strong>{cont.title}</strong>
+                        <Link to={`/${contentType}/${cont.id}`}><strong>{cont.title}</strong></Link>
                     </div>
                     <div className="row mx-auto">
                         <small className="text-muted">{cont.subtitle}</small>
                     </div>
                 </div>
-                <div className="col-3 d-flex justify-content-between">
+                <div className="col-5 d-flex justify-content-between">
                     <p className="bg-secondary text-light">PUBLISHED</p>
                     <p>a year ago</p>
+                    <button className="btn btn-danger" onClick={() => { deleteFunction(cont.id) }}>Delete</button>
+                    {/* <button className="btn btn-danger" onClick={() => { console.log(cont) }}>Delete</button> */}
                 </div>
             </div>
         </li>
-        </Link>)
+    )
     )
 
 }
@@ -47,6 +50,9 @@ const Content = (props) => {
     const [recordCount, setRecordCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [size, setSize] = useState(25);
+    const deleteItem = (id) => {
+        props.deleteContent(id);
+    }
     console.log(props);
     const updateContent = async () => {
         const searchString = new URLSearchParams(props.history.location.search);
@@ -76,7 +82,7 @@ const Content = (props) => {
                 <ul className="list-group" style={listGroupStyle}>
                     <li className="list-group-item bg-info">
                         <div className="row mx-auto">
-                            <div className="col-9">
+                            <div className="col-7">
                                 <span className="text-light">TITLE</span>
                             </div>
                             <div className="col-3 d-flex justify-content-between">
@@ -85,14 +91,13 @@ const Content = (props) => {
                             </div>
                         </div>
                     </li>
-                    {displayContent(content, props.labels.singular.toLowerCase())}
+                    {displayContent(content, props.labels.singular.toLowerCase(), deleteItem)}
                 </ul>
             </div>
 
             <div className="row mx-auto d-flex justify-content-center">
                 <Pagination type={props.labels.plural.toLowerCase()} size={size} total={recordCount} currentPage={currentPage} />
             </div>
-            {console.log(content)}
         </Fragment>
     )
 }
