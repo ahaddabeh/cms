@@ -5,21 +5,8 @@ const listGroupStyle = {
     width: "90%"
 }
 
-const determineContentType = (id) => {
-    if (+id === 1) {
-        return "Pages";
-    }
-    else if (+id === 2) {
-        return "Pategories";
-    }
-    else if (+id === 3) {
-        return "Tags";
-    }
-    return 0;
-}
-
-// const displayContent = (contentArray, contentType, deleteFunction) => {
-const displayContent = (contentArray, contentType) => {
+const displayContent = (contentArray, contentType, deleteFunction) => {
+    // const displayContent = (contentArray, contentType) => {
     return (contentArray.map((cont) =>
         <li key={`${cont.title}_${cont.subtitle}_${cont.id}`} className="list-group-item">
             <div className="row mx-auto">
@@ -34,7 +21,7 @@ const displayContent = (contentArray, contentType) => {
                 <div className="col-3 d-flex justify-content-between">
                     <p className="bg-secondary text-light">PUBLISHED</p>
                     <p>a year ago</p>
-                    {/* <button className="btn btn-danger" onClick={() => { deleteFunction(cont.id) }}>Delete</button> */}
+                    <button className="btn btn-danger" onClick={() => { deleteFunction(cont.id) }}>Delete</button>
                     {/* <button className="btn btn-danger" onClick={() => { console.log(cont) }}>Delete</button> */}
                 </div>
             </div>
@@ -50,8 +37,14 @@ const Content = (props) => {
     const [recordCount, setRecordCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [size, setSize] = useState(25);
-    const deleteItem = (id) => {
-        props.deleteContent(id);
+    const deleteItem = async (id) => {
+        try {
+            await props.deleteContent(id);
+            await updateContent();
+        } catch (error) {
+            console.log("Error", error);
+        }
+
     }
     console.log(props);
     const updateContent = async () => {
@@ -91,8 +84,8 @@ const Content = (props) => {
                             </div>
                         </div>
                     </li>
-                    {displayContent(content, props.labels.singular.toLowerCase(), deleteItem)}
                     {/* {displayContent(content, props.labels.singular.toLowerCase(), deleteItem)} */}
+                    {displayContent(content, props.labels.singular.toLowerCase(), deleteItem)}
                 </ul>
             </div>
 

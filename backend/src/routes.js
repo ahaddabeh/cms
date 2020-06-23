@@ -10,7 +10,7 @@ import UserForm from "./components/ui/UserForm";
 import {
     _fetchAll,
     _fetchOne,
-    save,
+    _save,
     _delete
 } from "./api";
 
@@ -64,6 +64,7 @@ const routes = [
     {
         path: ["/page", "/page/:id"],
         exact: true,
+        labels: { plural: "Pages", singular: "Page", type: 1 },
         component: ContentForm,
         saveContent: async (data, method = "post") => await _save("/api/pages", data, method),
         fetchDetails: async (id) => await _fetchOne(`/api/pages/${id}`),
@@ -72,6 +73,7 @@ const routes = [
     {
         path: ["/category", "/category/:id"],
         exact: true,
+        labels: { plural: "Categories", singular: "Category", type: 2 },
         component: ContentForm,
         saveContent: async (data, method = "post") => await _save("/api/categories", data, method),
         fetchDetails: async (id) => await _fetchOne(`/api/categories/${id}`),
@@ -81,6 +83,7 @@ const routes = [
         path: ["/tag", "/tag/:id"],
         exact: true,
         component: ContentForm,
+        labels: { plural: "Tags", singular: "Tag", type: 3 },
         saveContent: async (data, method = "post") => await _save("/api/tags", data, method),
         fetchDetails: async (id) => await _fetchOne(`/api/tags/${id}`),
         deleteContent: async (id) => await _delete(`/api/tags/${id}`)

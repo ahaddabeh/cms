@@ -168,21 +168,26 @@ const ContentForm = (props) => {
 
     console.log("Content Form");
 
-    const handleSubmit = () => {
+    const handleSubmit = async (contentId) => {
         const content_data = {
-            type: determineType(props.match.url),
+            contentTypeId: props.labels.type,
             title: titleRef.current.value,
             subtitle: subtitleRef.current.value,
+            createdBy: 1,
+            updatedBy: 1,
+            directory: `/${props.labels.plural.toLowerCase()}`,
+            content: "<p>Reiciendis cumque voluptatem quia rerum recusandae maxime quaerat minus. Harum sed est facilis non voluptatem molestiae. Expedita fuga eos autem et repellendus modi voluptas. Alias et voluptatem dolorum quis deserunt. Voluptatum a praesentium assumenda quo. Ut voluptate qui temporibus quasi autem veniam saepe quaerat laboriosam. Ut est et rerum quisquam est quia. Eaque quia dolorem perferendis autem esse animi iste animi.</p><ul><li>non eum voluptas voluptatibus eum quia animi repellendus</li></ul><p>Harum dolorem dolor quas voluptatem aut voluptas voluptatibus. Ut eum maxime sunt similique ab dolor. Delectus distinctio pariatur hic veritatis aut eum qui molestiae vero. Voluptatem error amet eum et minima. Officia quis praesentium provident excepturi non maxime. Dignissimos velit in mollitia quis accusantium ut nihil odit. Velit sunt exercitationem.</p>",
+            categoryId: 0
         }
 
         // Todo: determine if the record exists or if we are inserting a  record
         // If record has an id, method = patch. else, it's a new record and we post
-        // if(props.match.path.includes("id")){
-        //     props.saveContent(content_data, patch);
-        // }
-        // else {
-        //     props.saveContent(content_data, post);
-        // }
+        if (contentId && contentId > 0) {
+            await props.saveContent(content_data, "patch");
+        }
+        else {
+            await props.saveContent(content_data);
+        }
         console.log("This is content data: ", content_data);
 
     }
@@ -198,96 +203,68 @@ const ContentForm = (props) => {
     const [contentForm, setContentForm] = useState({});
     console.log(props);
     const updateContentForm = async () => {
-        const data = await props.fetchDetails(props.match.params.id);
-        console.log("This is content details", data);
-        setContentForm(data.data);
+        console.log(props.match.params);
+        if (props.match.params.id) {
+            const data = await props.fetchDetails(props.match.params.id);
+            setContentForm(data.data);
+            console.log("we're in the if condition", data);
+        }
     }
     useEffect(() => {
         updateContentForm();
     }, [props.match.params.id])
+    const setFormValues = async () => {
+        titleRef.current.value = contentForm.title || "";
+        subtitleRef.current.value = contentForm.subtitle || "";
+    }
     if (props.match.params.id) {
-        return (
-            <Fragment>
-                <div className="row mx-auto">
-                    <div className="col-9">
-                        <div className="card">
-                            <div className="card-header">
-                                Featured
+        setFormValues();
+    }
+    return (
+        <Fragment>
+            <div className="row mx-auto">
+                <div className="col-9">
+                    <div className="card">
+                        <div className="card-header">
+                            Featured
                 </div>
-                            <div className="card-body">
-                                <form>
-                                    <div className="form-group">
-                                        <label htmlFor="title">Title</label>
-                                        <input type="text" ref={titleRef} className="form-control" id="title" aria-describedby="titleHelp" defaultValue={contentForm.title} placeholder="Enter title" />
-                                        <small id="titleHelp" className="form-text text-muted">This is required</small>
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="subitle">Subtitle</label>
-                                        <input type="text" ref={subtitleRef} className="form-control" id="subitle" aria-describedby="subtitleHelp" defaultValue={contentForm.subtitle} placeholder="Enter subtitle" />
-                                        <small id="subtitleHelp" className="form-text text-muted">This is optional</small>
-                                    </div>
-                                    <div className="form-group">
-                                        {/* Wysiwyg is being a nuisance */}
-                                        <RichTextExample initialValue={initialValue} />
-                                    </div>
+                        <div className="card-body">
+                            <form>
+                                <div className="form-group">
+                                    <label htmlFor="title">Title</label>
+                                    <input type="text" ref={titleRef} className="form-control" id="title" aria-describedby="titleHelp" placeholder="Enter title" />
+                                    <small id="titleHelp" className="form-text text-muted">This is required</small>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="subitle">Subtitle</label>
+                                    <input type="text" ref={subtitleRef} className="form-control" id="subitle" aria-describedby="subtitleHelp" placeholder="Enter subtitle" />
+                                    <small id="subtitleHelp" className="form-text text-muted">This is optional</small>
+                                </div>
+                                <div className="form-group">
+                                    {/* Wysiwyg is being a nuisance */}
+                                    <RichTextExample initialValue={initialValue} />
+                                </div>
 
-                                    <div className="row mx-auto">
-                                        <div className="col-6">
-                                            <button type="button" onClick={handleSubmit} className="btn btn-primary">Update</button>
-                                        </div>
-                                        <div className="col-6 d-flex justify-content-end">
-                                            {/* <button className="btn btn-danger" onClick={props.deleteContent(contentForm.id)}>Delete</button> */}
-                                            <button className="btn btn-danger" onClick={() => { console.log("Deleting this data: ", contentForm) }}>Delete</button>
-                                        </div>
+                                <div className="row mx-auto">
+                                    <div className="col-6">
+                                        <button type="button" onClick={() => handleSubmit(+props.match.params.id)} className="btn btn-primary">Update</button>
                                     </div>
-                                </form>
-                            </div>
+                                    <div className="col-6 d-flex justify-content-end">
+                                        {/* <button className="btn btn-danger" onClick={props.deleteContent(contentForm.id)}>Delete</button> */}
+                                        <button className="btn btn-danger" onClick={() => { console.log("Deleting this data: ", contentForm) }}>Delete</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    <div className="col-3">
-                        <EditSideBar />
-                    </div>
                 </div>
-            </Fragment>
-        )
-    }
-    else {
-        return (
-            <Fragment>
-                <div className="row mx-auto">
-                    <div className="col-9">
-                        <div className="card">
-                            <div className="card-header">
-                                Featured
+                <div className="col-3">
+                    <EditSideBar />
                 </div>
-                            <div className="card-body">
-                                <form>
-                                    <div className="form-group">
-                                        <label htmlFor="title">Title</label>
-                                        <input type="text" ref={titleRef} className="form-control" id="title" aria-describedby="titleHelp" placeholder="Enter title" />
-                                        <small id="titleHelp" className="form-text text-muted">This is required</small>
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="subitle">Subtitle</label>
-                                        <input type="text" ref={subtitleRef} className="form-control" id="subitle" aria-describedby="subtitleHelp" placeholder="Enter subtitle" />
-                                        <small id="subtitleHelp" className="form-text text-muted">This is optional</small>
-                                    </div>
-                                    <div className="form-group">
-                                        {/* Wysiwyg is being a nuisance */}
-                                        <RichTextExample initialValue={initialValue} />
-                                    </div>
-                                    <button type="button" onClick={handleSubmit} className="btn btn-primary">Submit</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-3">
-                        <EditSideBar />
-                    </div>
-                </div>
-            </Fragment>
-        )
-    }
+            </div>
+        </Fragment>
+    )
 }
+
 
 export default ContentForm;
