@@ -66,21 +66,24 @@ const routes = [
         exact: true,
         component: ContentForm,
         saveContent: async (data, method = "post") => await _save("/api/pages", data, method),
-        fetchDetails: async (id) => await _fetchOne(`/api/pages/${id}`)
+        fetchDetails: async (id) => await _fetchOne(`/api/pages/${id}`),
+        deleteContent: async (id) => await _delete(`/api/pages/${id}`)
     },
     {
         path: ["/category", "/category/:id"],
         exact: true,
         component: ContentForm,
         saveContent: async (data, method = "post") => await _save("/api/categories", data, method),
-        fetchDetails: async (id) => await _fetchOne(`/api/categories/${id}`)
+        fetchDetails: async (id) => await _fetchOne(`/api/categories/${id}`),
+        deleteContent: async (id) => await _delete(`/api/categories/${id}`)
     },
     {
         path: ["/tag", "/tag/:id"],
         exact: true,
         component: ContentForm,
         saveContent: async (data, method = "post") => await _save("/api/tags", data, method),
-        fetchDetails: async (id) => await _fetchOne(`/api/tags/${id}`)
+        fetchDetails: async (id) => await _fetchOne(`/api/tags/${id}`),
+        deleteContent: async (id) => await _delete(`/api/tags/${id}`)
     },
     {
         path: ["/user", "/user/:id"],

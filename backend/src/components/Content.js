@@ -18,12 +18,12 @@ const determineContentType = (id) => {
     return 0;
 }
 
-const displayContent = (contentArray, contentType, deleteFunction) => {
-
+// const displayContent = (contentArray, contentType, deleteFunction) => {
+const displayContent = (contentArray, contentType) => {
     return (contentArray.map((cont) =>
         <li key={`${cont.title}_${cont.subtitle}_${cont.id}`} className="list-group-item">
             <div className="row mx-auto">
-                <div className="col-7">
+                <div className="col-9">
                     <div className="row mx-auto">
                         <Link to={`/${contentType}/${cont.id}`}><strong>{cont.title}</strong></Link>
                     </div>
@@ -31,10 +31,10 @@ const displayContent = (contentArray, contentType, deleteFunction) => {
                         <small className="text-muted">{cont.subtitle}</small>
                     </div>
                 </div>
-                <div className="col-5 d-flex justify-content-between">
+                <div className="col-3 d-flex justify-content-between">
                     <p className="bg-secondary text-light">PUBLISHED</p>
                     <p>a year ago</p>
-                    <button className="btn btn-danger" onClick={() => { deleteFunction(cont.id) }}>Delete</button>
+                    {/* <button className="btn btn-danger" onClick={() => { deleteFunction(cont.id) }}>Delete</button> */}
                     {/* <button className="btn btn-danger" onClick={() => { console.log(cont) }}>Delete</button> */}
                 </div>
             </div>
@@ -82,7 +82,7 @@ const Content = (props) => {
                 <ul className="list-group" style={listGroupStyle}>
                     <li className="list-group-item bg-info">
                         <div className="row mx-auto">
-                            <div className="col-7">
+                            <div className="col-9">
                                 <span className="text-light">TITLE</span>
                             </div>
                             <div className="col-3 d-flex justify-content-between">
@@ -92,6 +92,7 @@ const Content = (props) => {
                         </div>
                     </li>
                     {displayContent(content, props.labels.singular.toLowerCase(), deleteItem)}
+                    {/* {displayContent(content, props.labels.singular.toLowerCase(), deleteItem)} */}
                 </ul>
             </div>
 
