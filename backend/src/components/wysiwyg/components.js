@@ -69,14 +69,13 @@ export const _Icon = React.forwardRef(({ className, ...props }, ref) => (
 ))
 
 export const Icon = React.forwardRef(({ iconChoice, className, ...props }, ref) => {
-    console.log(iconChoice);
     return <i
         {...props}
         ref={ref}
         className={cx(
             `fa fa-${iconChoice}`,
             `
-        font-size: 18px;
+        
         vertical-align: text-bottom;
       `
         )}

@@ -1,9 +1,11 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState, useRef } from 'react'
 import isHotkey from 'is-hotkey'
-import { Editable, withReact, useSlate, Slate } from 'slate-react'
+import { Editable, withReact, useSlate, Slate, useEditor, useSelected, useFocused } from 'slate-react'
 import { Editor, Transforms, createEditor } from 'slate'
 import { withHistory } from 'slate-history'
-
+import isUrl from 'is-url';
+import imageExtensions from 'image-extensions';
+import { cx, css } from 'emotion'
 import { Button, Icon, Toolbar } from './components'
 
 const HOTKEYS = {
@@ -20,9 +22,12 @@ const RichTextExample = ({ initialValue }) => {
     const renderElement = useCallback(props => <Element {...props} />, [])
     const renderLeaf = useCallback(props => <Leaf {...props} />, [])
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
-
     return (
-        <Slate editor={editor} value={value} onChange={value => setValue(value)}>
+        <Slate editor={editor} value={value} onChange={value => {
+            setValue(value)
+            const content = JSON.stringify(value)
+        }}
+        >
             <div className="card m-3">
                 <div className="card-header">
                     <Toolbar>
@@ -36,6 +41,7 @@ const RichTextExample = ({ initialValue }) => {
                         <BlockButton format="blockquote" icon="quote-right" />
                         <BlockButton format="numbered-list" icon="list-ol" />
                         <BlockButton format="bulleted-list" icon="list" />
+                        <InsertImageButton icon="images" />
                     </Toolbar>
                 </div>
                 <div className="card-body">
@@ -103,7 +109,7 @@ const isMarkActive = (editor, format) => {
     return marks ? marks[format] === true : false
 }
 
-const Element = ({ attributes, children, element }) => {
+const _Element = ({ attributes, children, element }) => {
     switch (element.type) {
         case 'block-quote':
             return <blockquote {...attributes}>{children}</blockquote>
@@ -117,6 +123,30 @@ const Element = ({ attributes, children, element }) => {
             return <li {...attributes}>{children}</li>
         case 'numbered-list':
             return <ol {...attributes}>{children}</ol>
+        case 'image':
+            return <ImageElement {...props} />
+        default:
+            return <p {...attributes}>{children}</p>
+    }
+}
+
+const Element = props => {
+    const { attributes, children, element } = props;
+    switch (element.type) {
+        case 'block-quote':
+            return <blockquote {...attributes}>{children}</blockquote>
+        case 'bulleted-list':
+            return <ul {...attributes}>{children}</ul>
+        case 'heading-one':
+            return <h1 {...attributes}>{children}</h1>
+        case 'heading-two':
+            return <h2 {...attributes}>{children}</h2>
+        case 'list-item':
+            return <li {...attributes}>{children}</li>
+        case 'numbered-list':
+            return <ol {...attributes}>{children}</ol>
+        case 'image':
+            return <ImageElement {...props} />
         default:
             return <p {...attributes}>{children}</p>
     }
@@ -201,6 +231,92 @@ const MarkButton = ({ format, icon }) => {
         </Button>
     )
 }
+
+const withImages = editor => {
+    const { insertData, isVoid } = editor
+
+    editor.isVoid = element => {
+        return element.type === 'image' ? true : isVoid(element)
+    }
+
+    editor.insertData = data => {
+        const text = data.getData('text/plain')
+        const { files } = data
+
+        if (files && files.length > 0) {
+            for (const file of files) {
+                const reader = new FileReader()
+                const [mime] = file.type.split('/')
+
+                if (mime === 'image') {
+                    reader.addEventListener('load', () => {
+                        const url = reader.result
+                        insertImage(editor, url)
+                    })
+
+                    reader.readAsDataURL(file)
+                }
+            }
+        } else if (isImageUrl(text)) {
+            insertImage(editor, text)
+        } else {
+            insertData(data)
+        }
+    }
+
+    return editor
+}
+
+
+
+const insertImage = (editor, url) => {
+    const text = { text: '' }
+    const image = { type: 'image', url, children: [text] }
+    Transforms.insertNodes(editor, image)
+}
+
+const ImageElement = ({ attributes, children, element }) => {
+    // const selected = useSelected()
+    // const focused = useFocused()
+    return (
+        <div {...attributes}>
+            <div contentEditable={false}>
+                <img
+                    src={element.url}
+                    className={css`
+            display: block;
+            max-width: 100%;
+            max-height: 20em;`}
+                />
+            </div>
+            {children}
+        </div>
+    )
+}
+
+const InsertImageButton = ({ icon }) => {
+    const editor = useEditor()
+    return (
+        <Button
+            onMouseDown={event => {
+                event.preventDefault()
+                const url = window.prompt('Enter the URL of the image:')
+                if (!url) return
+                insertImage(editor, url)
+            }}
+        >
+            <Icon iconChoice={icon} />
+        </Button>
+    )
+}
+
+const isImageUrl = url => {
+    if (!url) return false
+    if (!isUrl(url)) return false
+    const ext = new URL(url).pathname.split('.').pop()
+    return imageExtensions.includes(ext)
+}
+
 
 
 
