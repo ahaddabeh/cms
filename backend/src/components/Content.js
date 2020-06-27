@@ -11,8 +11,9 @@ const displayContent = (contentArray, contentType, deleteFunction) => {
         <li key={`${cont.title}_${cont.subtitle}_${cont.id}`} className="list-group-item">
             <div className="row mx-auto">
                 <div className="col-9">
-                    <div className="row mx-auto">
+                    <div className=" row mx-auto d-flex align-items-center">
                         <Link to={`/${contentType}/${cont.id}`}><strong>{cont.title}</strong></Link>
+                        <i className="fas fa-trash-alt ml-2" onClick={() => { deleteFunction(cont.id) }}></i>
                     </div>
                     <div className="row mx-auto">
                         <small className="text-muted">{cont.subtitle}</small>
@@ -21,8 +22,6 @@ const displayContent = (contentArray, contentType, deleteFunction) => {
                 <div className="col-3 d-flex justify-content-between">
                     <p className="bg-secondary text-light">PUBLISHED</p>
                     <p>a year ago</p>
-                    <button className="btn btn-danger" onClick={() => { deleteFunction(cont.id) }}>Delete</button>
-                    {/* <button className="btn btn-danger" onClick={() => { console.log(cont) }}>Delete</button> */}
                 </div>
             </div>
         </li>

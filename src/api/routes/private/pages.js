@@ -10,6 +10,7 @@ router.get("/", injectContentType(PAGES), ContentController.list);
 router.get("/:id", injectContentType(PAGES), ContentController.read);
 // Update one
 router.patch("/:id", ContentController.update);
+// router.patch("/:id", (req, res) => console.log(req.body));
 // Delete one
 router.delete("/:id", ContentController.delete);
 // Create one

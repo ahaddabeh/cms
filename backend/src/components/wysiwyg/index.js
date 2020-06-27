@@ -17,15 +17,18 @@ const HOTKEYS = {
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 
-const RichTextExample = ({ initialValue }) => {
+const RichTextExample = ({ initialValue, onChange }) => {
     const [value, setValue] = useState(initialValue)
     const renderElement = useCallback(props => <Element {...props} />, [])
     const renderLeaf = useCallback(props => <Leaf {...props} />, [])
     const editor = useMemo(() => withHistory(withReact(createEditor())), [])
+    const handleValue = (value) => {
+        setValue(value)
+    }
     return (
         <Slate editor={editor} value={value} onChange={value => {
-            setValue(value)
-            const content = JSON.stringify(value)
+            setValue(value);
+            onChange(value);
         }}
         >
             <div className="card m-3">

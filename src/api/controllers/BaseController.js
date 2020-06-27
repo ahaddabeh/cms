@@ -47,7 +47,8 @@ class BaseController {
     _update = async (req, res) => {
         try {
             const { where = null, ..._options } = req.options || {}
-            const options = { where: { ...where, id: req.params.id }, ..._options };
+            const options = { where: { ...where, id: +req.params.id }, ..._options };
+            console.log(options);
             return { status: 200, result: await this.model.update({ ...req.body }, options) };
         } catch (error) {
             console.log(error)

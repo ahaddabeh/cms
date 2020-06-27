@@ -1,5 +1,26 @@
 import React, { useRef, Fragment, useState, useEffect } from "react";
 import RichTextExample from "../wysiwyg/index";
+import Popup from "reactjs-popup";
+// import Html from "slate-html-serializer";
+import Editor, { createEditorStateWithText } from "draft-js-plugins-editor";
+import createToolbarPlugin from "draft-js-static-toolbar-plugin";
+import { convertToRaw } from "draft-js";
+import {
+    ItalicButton,
+    BoldButton,
+    UnderlineButton,
+    CodeButton,
+    HeadlineOneButton,
+    HeadlineTwoButton,
+    HeadlineThreeButton,
+    UnorderedListButton,
+    OrderedListButton,
+    BlockquoteButton,
+    CodeBlockButton,
+} from 'draft-js-buttons';
+import editorStyles from "../../../assets/editorStyles.css"
+
+
 
 const EditSideBar = (content) => {
     return (<div className="card">
@@ -12,23 +33,40 @@ const EditSideBar = (content) => {
             </div>
             <div className="row mx-auto">
                 <div className="col-8"></div>
-                <div className="col-4"><button className="btn btn-light btn-sm border mb-2">Preview
-                                            </button>
+                <div className="col-4">
+
+                    <Popup trigger={<button className="btn btn-primary btn-sm">Edit</button>} position="bottom center">
+                        <div><div className="form-check">
+                            <input className="form-check-input" type="radio" name="publishRadios" id="publishRadios" defaultValue="Publish" />
+                            <label className="form-check-label" htmlFor="publishRadios">
+                                Default radio
+                    </label>
+                        </div>
+                            <div className="form-check">
+                                <input className="form-check-input" type="radio" name="unpublishRadios" id="unpublishRadios" defaultValue="Unpublish" />
+                                <label className="form-check-label" htmlFor="unpublishRadios">
+                                    Second default radio
+                    </label>
+                            </div></div>
+                    </Popup>
                 </div>
             </div>
 
             <p className="card-text"><i className="fas fa-map-pin mr-2 text-muted"></i>
                 <span className="text-muted">Status:</span>
-                                        Published <a href="#"><small><u>Edit</u></small></a></p>
+                UDFN {content.status}</p>
             <p className="card-text"><i className="fas fa-eye mr-2 text-muted"></i>
                 <span className="text-muted">Visibility:</span>
-                                        Public <a href="#"><small><u>Edit</u></small></a></p>
+                {content.visibility} <a href="#"><small><u>Edit</u></small></a></p>
             <p className="card-text"><i className="fas fa-redo-alt mr-2 text-muted"></i>
                 <span className="text-muted">Revisions:</span>
                                         4 <a href="#"><small><u>Browse</u></small></a></p>
             <p className="card-text"><i className="fas fa-calendar-alt mr-2 text-muted"></i>
                 <span className="text-muted">Published On:</span>
-                                        August 9, 2014 @ 16:44 <a href="#"><small><u>Edit</u></small></a></p>
+                {content.publishedOn}
+                {console.log("Content in the edit sidebar function", content)}
+                {/* <a href="#"><small><u>Edit</u></small></a> */}
+            </p>
 
         </div>
         <div className="card-body border">
@@ -156,17 +194,39 @@ const determineType = (url) => {
     return 0;
 }
 
-const ContentForm = (props) => {
-    console.log("These are the props", props);
+const staticToolbarPlugin = createToolbarPlugin();
+const { Toolbar } = staticToolbarPlugin;
+const plugins = [staticToolbarPlugin];
+const text = "Alaa Haddabeh has to be the most handsome human being to walk this planet and it's not a debate";
 
-    // const typeRef = useRef();
+const ContentForm = (props) => {
+
+    // const [value, setValue] = useState(initialValue);
+
+
+    const editor = useRef(null);
+    const focusEditor = () => {
+        editor.current.focus();
+    }
+
+
+
+
+
     const titleRef = useRef();
     const subtitleRef = useRef();
-    // const contentRef = React.createRef();
+    // const contentRef = useRef();
     // const catIdRef = useRef();
     // const slugRef = useRef();
 
     console.log("Content Form");
+
+
+    // const handleEditorChange = (value) => {
+
+    //     console.log(Html.serialize(value));
+    // }
+
 
     const handleSubmit = async (contentId) => {
         const content_data = {
@@ -183,7 +243,8 @@ const ContentForm = (props) => {
         // Todo: determine if the record exists or if we are inserting a  record
         // If record has an id, method = patch. else, it's a new record and we post
         if (contentId && contentId > 0) {
-            await props.saveContent(content_data, "patch");
+            console.log("We should be patching");
+            await props.saveContent({ ...content_data, id: contentId }, "patch");
         }
         else {
             await props.saveContent(content_data);
@@ -201,21 +262,27 @@ const ContentForm = (props) => {
     }
 
     const [contentForm, setContentForm] = useState({});
+    const [editorState, setEditorState] = useState(createEditorStateWithText(text));
     console.log(props);
     const updateContentForm = async () => {
         console.log(props.match.params);
         if (props.match.params.id) {
             const data = await props.fetchDetails(props.match.params.id);
             setContentForm(data.data);
-            console.log("we're in the if condition", data);
+
         }
     }
     useEffect(() => {
         updateContentForm();
+        focusEditor()
     }, [props.match.params.id])
     const setFormValues = async () => {
-        titleRef.current.value = contentForm.title || "";
-        subtitleRef.current.value = contentForm.subtitle || "";
+        if (titleRef && titleRef.current) {
+            titleRef.current.value = contentForm.title || "";
+        }
+        if (subtitleRef && subtitleRef.current) {
+            subtitleRef.current.value = contentForm.subtitle || "";
+        }
     }
     if (props.match.params.id) {
         setFormValues();
@@ -240,9 +307,43 @@ const ContentForm = (props) => {
                                     <input type="text" ref={subtitleRef} className="form-control" id="subitle" aria-describedby="subtitleHelp" placeholder="Enter subtitle" />
                                     <small id="subtitleHelp" className="form-text text-muted">This is optional</small>
                                 </div>
-                                <div className="form-group">
+                                <div className="form-group" onClick={focusEditor}>
                                     {/* Wysiwyg is being a nuisance */}
-                                    <RichTextExample initialValue={initialValue} />
+                                    {/* <RichTextExample initialValue={initialValue} onChange={handleEditorChange} /> */}
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <Toolbar>
+                                                {
+                                                    (externalProps) => (
+                                                        <div className="d-flex align-items-center">
+                                                            <BoldButton {...externalProps} />
+                                                            <ItalicButton {...externalProps} />
+                                                            <UnderlineButton {...externalProps} />
+                                                            <CodeButton {...externalProps} />
+                                                            {/* <Separator {...externalProps} /> */}
+                                                            <HeadlineOneButton {...externalProps} />
+                                                            <HeadlineTwoButton {...externalProps} />
+                                                            <HeadlineThreeButton {...externalProps} />
+                                                            <UnorderedListButton {...externalProps} />
+                                                            <OrderedListButton {...externalProps} />
+                                                            <BlockquoteButton {...externalProps} />
+                                                            <CodeBlockButton {...externalProps} />
+                                                        </div>
+                                                    )
+                                                }
+                                            </Toolbar>
+                                        </div>
+                                        <div class="card-body">
+                                            <Editor
+                                                ref={editor}
+                                                editorState={editorState}
+                                                onChange={editorState => setEditorState(editorState)}
+                                                plugins={plugins}
+                                            />
+                                        </div>
+                                    </div>
+
+
                                 </div>
 
                                 <div className="row mx-auto">
@@ -250,7 +351,8 @@ const ContentForm = (props) => {
                                         <button type="button" onClick={() => handleSubmit(+props.match.params.id)} className="btn btn-primary">Update</button>
                                     </div>
                                     <div className="col-6 d-flex justify-content-end">
-                                        {/* <button className="btn btn-danger" onClick={props.deleteContent(contentForm.id)}>Delete</button> */}
+                                        {/* <Link to={`/${props.labels.plural.toLowerCase()}`} className="btn btn-danger" onClick={props.deleteContent(contentForm.id)}>Delete</Link> */}
+                                        {/* <Link to={`/${props.labels.plural.toLowerCase()}`} className="btn btn-danger" onClick={() => { console.log("Deleting this data: ", contentForm) }}>Delete</Link> */}
                                         <button className="btn btn-danger" onClick={() => { console.log("Deleting this data: ", contentForm) }}>Delete</button>
                                     </div>
                                 </div>
@@ -259,7 +361,7 @@ const ContentForm = (props) => {
                     </div>
                 </div>
                 <div className="col-3">
-                    <EditSideBar />
+                    {EditSideBar(contentForm)}
                 </div>
             </div>
         </Fragment>

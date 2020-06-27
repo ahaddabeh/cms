@@ -20,6 +20,7 @@ export const _delete = async (url) => {
 }
 
 export const _save = async (url, data, method = "post") => {
+    console.log(url, data, method);
     return await axios({
         method, url: `http://localhost:3500${url}`, data,
         headers: {
