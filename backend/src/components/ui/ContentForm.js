@@ -1,24 +1,8 @@
 import React, { useRef, Fragment, useState, useEffect } from "react";
-import RichTextExample from "../wysiwyg/index";
-import Popup from "reactjs-popup";
 // import Html from "slate-html-serializer";
-import Editor, { createEditorStateWithText } from "draft-js-plugins-editor";
-import createToolbarPlugin from "draft-js-static-toolbar-plugin";
-import { convertToRaw } from "draft-js";
-import {
-    ItalicButton,
-    BoldButton,
-    UnderlineButton,
-    CodeButton,
-    HeadlineOneButton,
-    HeadlineTwoButton,
-    HeadlineThreeButton,
-    UnorderedListButton,
-    OrderedListButton,
-    BlockquoteButton,
-    CodeBlockButton,
-} from 'draft-js-buttons';
-import editorStyles from "../../../assets/editorStyles.css"
+
+import { convertToRaw, convertFromRaw, EditorState } from "draft-js";
+
 
 
 
@@ -35,20 +19,7 @@ const EditSideBar = (content) => {
                 <div className="col-8"></div>
                 <div className="col-4">
 
-                    <Popup trigger={<button className="btn btn-primary btn-sm">Edit</button>} position="bottom center">
-                        <div><div className="form-check">
-                            <input className="form-check-input" type="radio" name="publishRadios" id="publishRadios" defaultValue="Publish" />
-                            <label className="form-check-label" htmlFor="publishRadios">
-                                Default radio
-                    </label>
-                        </div>
-                            <div className="form-check">
-                                <input className="form-check-input" type="radio" name="unpublishRadios" id="unpublishRadios" defaultValue="Unpublish" />
-                                <label className="form-check-label" htmlFor="unpublishRadios">
-                                    Second default radio
-                    </label>
-                            </div></div>
-                    </Popup>
+
                 </div>
             </div>
 
@@ -194,10 +165,7 @@ const determineType = (url) => {
     return 0;
 }
 
-const staticToolbarPlugin = createToolbarPlugin();
-const { Toolbar } = staticToolbarPlugin;
-const plugins = [staticToolbarPlugin];
-const text = "Alaa Haddabeh has to be the most handsome human being to walk this planet and it's not a debate";
+
 
 const ContentForm = (props) => {
 
@@ -205,9 +173,7 @@ const ContentForm = (props) => {
 
 
     const editor = useRef(null);
-    const focusEditor = () => {
-        editor.current.focus();
-    }
+
 
 
 
@@ -242,13 +208,13 @@ const ContentForm = (props) => {
 
         // Todo: determine if the record exists or if we are inserting a  record
         // If record has an id, method = patch. else, it's a new record and we post
-        if (contentId && contentId > 0) {
-            console.log("We should be patching");
-            await props.saveContent({ ...content_data, id: contentId }, "patch");
-        }
-        else {
-            await props.saveContent(content_data);
-        }
+        // if (contentId && contentId > 0) {
+        //     console.log("We should be patching");
+        //     await props.saveContent({ ...content_data, id: contentId }, "patch");
+        // }
+        // else {
+        //     await props.saveContent(content_data);
+        // }
         console.log("This is content data: ", content_data);
 
     }
@@ -262,19 +228,18 @@ const ContentForm = (props) => {
     }
 
     const [contentForm, setContentForm] = useState({});
-    const [editorState, setEditorState] = useState(createEditorStateWithText(text));
+
     console.log(props);
     const updateContentForm = async () => {
         console.log(props.match.params);
         if (props.match.params.id) {
             const data = await props.fetchDetails(props.match.params.id);
             setContentForm(data.data);
-
         }
     }
     useEffect(() => {
         updateContentForm();
-        focusEditor()
+
     }, [props.match.params.id])
     const setFormValues = async () => {
         if (titleRef && titleRef.current) {
@@ -307,39 +272,15 @@ const ContentForm = (props) => {
                                     <input type="text" ref={subtitleRef} className="form-control" id="subitle" aria-describedby="subtitleHelp" placeholder="Enter subtitle" />
                                     <small id="subtitleHelp" className="form-text text-muted">This is optional</small>
                                 </div>
-                                <div className="form-group" onClick={focusEditor}>
+                                <div className="form-group">
                                     {/* Wysiwyg is being a nuisance */}
-                                    {/* <RichTextExample initialValue={initialValue} onChange={handleEditorChange} /> */}
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <Toolbar>
-                                                {
-                                                    (externalProps) => (
-                                                        <div className="d-flex align-items-center">
-                                                            <BoldButton {...externalProps} />
-                                                            <ItalicButton {...externalProps} />
-                                                            <UnderlineButton {...externalProps} />
-                                                            <CodeButton {...externalProps} />
-                                                            {/* <Separator {...externalProps} /> */}
-                                                            <HeadlineOneButton {...externalProps} />
-                                                            <HeadlineTwoButton {...externalProps} />
-                                                            <HeadlineThreeButton {...externalProps} />
-                                                            <UnorderedListButton {...externalProps} />
-                                                            <OrderedListButton {...externalProps} />
-                                                            <BlockquoteButton {...externalProps} />
-                                                            <CodeBlockButton {...externalProps} />
-                                                        </div>
-                                                    )
-                                                }
-                                            </Toolbar>
+
+                                    <div className="card">
+                                        <div className="card-header">
+
                                         </div>
-                                        <div class="card-body">
-                                            <Editor
-                                                ref={editor}
-                                                editorState={editorState}
-                                                onChange={editorState => setEditorState(editorState)}
-                                                plugins={plugins}
-                                            />
+                                        <div className="card-body">
+
                                         </div>
                                     </div>
 
