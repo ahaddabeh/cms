@@ -1,11 +1,9 @@
 import React, { useRef, Fragment, useState, useEffect } from "react";
-// import Html from "slate-html-serializer";
-
-import { convertToRaw, convertFromRaw, EditorState } from "draft-js";
-
-
-
-
+import { convertToRaw, Editor, EditorState, RichUtils, convertFromHTML, ContentState, AtomicBlockUtils } from "draft-js";
+import { Link } from "react-router-dom";
+import ReactDOM from "react-dom";
+import TextEditor from "../wysiwyg/editor";
+import draftToHTML from "draftjs-to-html";
 const EditSideBar = (content) => {
     return (<div className="card">
         <div className="card-body border">
@@ -110,136 +108,138 @@ const EditSideBar = (content) => {
     </div>)
 }
 
-const initialValue = [
-    {
-        type: 'paragraph',
-        children: [
-            { text: 'This is editable ' },
-            { text: 'rich', bold: true },
-            { text: ' text, ' },
-            { text: 'much', italic: true },
-            { text: ' better than a ' },
-            { text: '<textarea>', code: true },
-            { text: '!' },
-        ],
-    },
-    {
-        type: 'paragraph',
-        children: [
-            {
-                text:
-                    "Since it's rich text, you can do things like turn a selection of text ",
-            },
-            { text: 'bold', bold: true },
-            {
-                text:
-                    ', or add a semantically rendered block quote in the middle of the page, like this:',
-            },
-        ],
-    },
-    {
-        type: 'image',
-        url: 'https://source.unsplash.com/kFrdX5IeQzI',
-        children: [{ text: '' }],
-    },
-    {
-        type: 'block-quote',
-        children: [{ text: 'A wise quote.' }],
-    },
-    {
-        type: 'paragraph',
-        children: [{ text: 'Try it out for yourself!' }],
-    },
-]
-
-const determineType = (url) => {
-    if (url.includes("page")) {
-        return 1;
-    }
-    else if (url.includes("category")) {
-        return 2;
-    }
-    else if (url.includes("tag")) {
-        return 3;
-    }
-    return 0;
-}
-
 
 
 const ContentForm = (props) => {
 
-    // const [value, setValue] = useState(initialValue);
-
-
+    const [editorState, setEditorState] = useState(EditorState.createEmpty());
     const editor = useRef(null);
+    const focusEditor = () => editor.current.focus();
+    const onChange = editorState => {
+        setEditorState(editorState);
+    }
 
+    const handleKeyCommand = (command, editorState) => {
+        const newState = RichUtils.handleKeyCommand(editorState, command);
+        if (newState) {
+            onChange(newState);
+            return "handled";
+        }
+        return "not-handled";
+    }
 
-
+    // buttons automatically have an event attached to them. Do e.preventDefault() to
+    // keep it from doing the default behavior
+    // and to keep it from refreshing
+    const _onBoldClick = (e) => {
+        e.preventDefault();
+        setEditorState(RichUtils.toggleInlineStyle(editorState, "BOLD"));
+    }
+    const _onUnderlineClick = (e) => {
+        e.preventDefault();
+        setEditorState(RichUtils.toggleInlineStyle(editorState, "UNDERLINE"));
+    }
+    const _onItalicClick = (e) => {
+        e.preventDefault();
+        setEditorState(RichUtils.toggleInlineStyle(editorState, "ITALIC"));
+    }
+    const _onCodeClick = (e) => {
+        e.preventDefault();
+        setEditorState(RichUtils.toggleCode(editorState));
+    }
+    const _onUnorderedClick = (e) => {
+        e.preventDefault();
+        setEditorState(RichUtils.toggleBlockType(editorState, "unordered-list-item"));
+    }
+    const _onOrderedClick = (e) => {
+        e.preventDefault();
+        setEditorState(RichUtils.toggleBlockType(editorState, "ordered-list-item"));
+    }
+    const _onHeaderOneClick = (e) => {
+        e.preventDefault();
+        setEditorState(RichUtils.toggleBlockType(editorState, "header-one"));
+    }
+    const _onHeaderTwoClick = (e) => {
+        e.preventDefault();
+        setEditorState(RichUtils.toggleBlockType(editorState, "header-two"));
+    }
+    const _onHeaderThreeClick = (e) => {
+        e.preventDefault();
+        setEditorState(RichUtils.toggleBlockType(editorState, "header-three"));
+    }
+    const _onHeaderFourClick = (e) => {
+        e.preventDefault();
+        setEditorState(RichUtils.toggleBlockType(editorState, "header-four"));
+    }
+    const _onHeaderFiveClick = (e) => {
+        e.preventDefault();
+        setEditorState(RichUtils.toggleBlockType(editorState, "header-five"));
+    }
+    const _onHeaderSixClick = (e) => {
+        e.preventDefault();
+        setEditorState(RichUtils.toggleBlockType(editorState, "header-six"));
+    }
+    const _onRightClick = (e) => {
+        e.preventDefault();
+        setEditorState(RichUtils.toggleBlockType(editorState, "right"));
+    }
 
 
 
     const titleRef = useRef();
     const subtitleRef = useRef();
-    // const contentRef = useRef();
-    // const catIdRef = useRef();
-    // const slugRef = useRef();
-
-    console.log("Content Form");
-
-
-    // const handleEditorChange = (value) => {
-
-    //     console.log(Html.serialize(value));
-    // }
+    const viewRef = useRef();
 
 
     const handleSubmit = async (contentId) => {
+        const rawContentState = convertToRaw(editorState.getCurrentContent());
+        const markup = draftToHTML(rawContentState);
+        console.log("Here are the blocks", markup);
+        console.log("Views select thing:", viewRef.current.value)
         const content_data = {
             contentTypeId: props.labels.type,
             title: titleRef.current.value,
             subtitle: subtitleRef.current.value,
+            view: viewRef.current.value,
             createdBy: 1,
             updatedBy: 1,
             directory: `/${props.labels.plural.toLowerCase()}`,
-            content: "<p>Reiciendis cumque voluptatem quia rerum recusandae maxime quaerat minus. Harum sed est facilis non voluptatem molestiae. Expedita fuga eos autem et repellendus modi voluptas. Alias et voluptatem dolorum quis deserunt. Voluptatum a praesentium assumenda quo. Ut voluptate qui temporibus quasi autem veniam saepe quaerat laboriosam. Ut est et rerum quisquam est quia. Eaque quia dolorem perferendis autem esse animi iste animi.</p><ul><li>non eum voluptas voluptatibus eum quia animi repellendus</li></ul><p>Harum dolorem dolor quas voluptatem aut voluptas voluptatibus. Ut eum maxime sunt similique ab dolor. Delectus distinctio pariatur hic veritatis aut eum qui molestiae vero. Voluptatem error amet eum et minima. Officia quis praesentium provident excepturi non maxime. Dignissimos velit in mollitia quis accusantium ut nihil odit. Velit sunt exercitationem.</p>",
+            content: markup,
             categoryId: 0
         }
 
-        // Todo: determine if the record exists or if we are inserting a  record
+        // Todo: determine if the record exists or if we are inserting a new record
         // If record has an id, method = patch. else, it's a new record and we post
-        // if (contentId && contentId > 0) {
-        //     console.log("We should be patching");
-        //     await props.saveContent({ ...content_data, id: contentId }, "patch");
-        // }
-        // else {
-        //     await props.saveContent(content_data);
-        // }
+        if (contentId && contentId > 0) {
+            console.log("We should be patching");
+            await props.saveContent({ ...content_data, id: contentId }, "patch");
+        }
+        else {
+            await props.saveContent(content_data);
+        }
         console.log("This is content data: ", content_data);
 
     }
 
-    const resetForm = () => {
-        typeRef.current.value = "";
-        catIdRef.current.value = "";
-        titleRef.current.value = "";
-        subtitleRef.current.value = "";
-        contentRef.current.value = "";
-    }
-
     const [contentForm, setContentForm] = useState({});
 
-    console.log(props);
     const updateContentForm = async () => {
-        console.log(props.match.params);
         if (props.match.params.id) {
             const data = await props.fetchDetails(props.match.params.id);
             setContentForm(data.data);
+            if (data.data.content.length) {
+                const blocksFromHTML = convertFromHTML(data.data.content);
+                const state = ContentState.createFromBlockArray(
+                    blocksFromHTML.contentBlocks,
+                    blocksFromHTML.entityMap,
+                );
+                setEditorState(EditorState.createWithContent(state))
+            }
         }
     }
     useEffect(() => {
         updateContentForm();
-
+        focusEditor();
     }, [props.match.params.id])
     const setFormValues = async () => {
         if (titleRef && titleRef.current) {
@@ -248,10 +248,15 @@ const ContentForm = (props) => {
         if (subtitleRef && subtitleRef.current) {
             subtitleRef.current.value = contentForm.subtitle || "";
         }
+        if (viewRef && viewRef.current) {
+            viewRef.current.value = contentForm.view || "";
+        }
     }
+
     if (props.match.params.id) {
         setFormValues();
     }
+
     return (
         <Fragment>
             <div className="row mx-auto">
@@ -268,23 +273,49 @@ const ContentForm = (props) => {
                                     <small id="titleHelp" className="form-text text-muted">This is required</small>
                                 </div>
                                 <div className="form-group">
+                                    <label htmlFor="view">View</label>
+                                    <select name="view" ref={viewRef}>
+                                        <option value="Home">Home</option>
+                                        <option value="Inner">Inner</option>
+                                        <option value="Blog">Blog</option>
+                                    </select>
+                                    <small id="titleHelp" className="form-text text-muted">This is required</small>
+                                </div>
+                                <div className="form-group">
                                     <label htmlFor="subitle">Subtitle</label>
                                     <input type="text" ref={subtitleRef} className="form-control" id="subitle" aria-describedby="subtitleHelp" placeholder="Enter subtitle" />
                                     <small id="subtitleHelp" className="form-text text-muted">This is optional</small>
                                 </div>
                                 <div className="form-group">
                                     {/* Wysiwyg is being a nuisance */}
-
+                                    {/* <TextEditor initialValue={contentForm.content} /> */}
                                     <div className="card">
                                         <div className="card-header">
+                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onBoldClick}><i className="fas fa-bold"></i></button>
+                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onItalicClick}><i className="fas fa-italic"></i></button>
+                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onUnderlineClick}><i className="fas fa-underline"></i></button>
+                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onCodeClick}><i className="fas fa-code"></i></button>
+                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onUnorderedClick}><i className="fas fa-list-ul"></i></button>
+                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onOrderedClick}><i className="fas fa-list-ol"></i></button>
+                                            {/* <button className="btn btn-light btn-sm border mx-2" onClick={}><i className="fas fa-image"></i></button> */}
+                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onHeaderOneClick}>H1</button>
+                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onHeaderTwoClick}>H2</button>
+                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onHeaderThreeClick}>H3</button>
+                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onHeaderFourClick}>H4</button>
+                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onHeaderFiveClick}>H5</button>
+                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onHeaderSixClick}>H6</button>
+                                            {/* <button className="btn btn-light btn-sm border mx-2" onClick={_onRightClick}><i className="fas fa-align-right"></i></button> */}
 
+                                            {/* <button className="btn btn-light btn-sm border mx-2" onClick={_onAlignLeftClick}><i class="fas fa-align-left"></i></button>
+                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onAlignCenterClick}><i class="fas fa-align-center"></i></button>
+                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onAlignRightClick}><i className="fas fa-align-right"></i></button> */}
+                                            {/* <button className="btn btn-light btn-sm border mx-2" onClick={_onLinkClick.bind(editorState)}><i className="fas fa-link"></i></button> */}
+                                            {/* <button className="btn btn-light btn-sm border mx-2" onClick={addImage.bind(editorState)}><i className="fas fa-image"></i></button> */}
                                         </div>
-                                        <div className="card-body">
-
+                                        <div className="card-body" onClick={focusEditor}>
+                                            <Editor ref={editor} editorState={editorState} onChange={onChange} handleKeyCommand={handleKeyCommand} />
                                         </div>
                                     </div>
-
-
                                 </div>
 
                                 <div className="row mx-auto">
@@ -302,7 +333,7 @@ const ContentForm = (props) => {
                     </div>
                 </div>
                 <div className="col-3">
-                    {EditSideBar(contentForm)}
+                    <EditSideBar />
                 </div>
             </div>
         </Fragment>

@@ -32,8 +32,14 @@ const Users = (props) => {
     const [users, setUsers] = useState([]);
     const [recordCount, setRecordCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
-    const deleteItem = (id) => {
-        props.deleteUser(id);
+    const deleteItem = async (id) => {
+        try {
+            await props.deleteUser(id);
+            await updateUsers();
+        }
+        catch (error) {
+            console.log("Error:", error);
+        }
     }
     console.log(props);
     const updateUsers = async () => {
