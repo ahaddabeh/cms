@@ -2,10 +2,11 @@ import React, { useRef, Fragment, useState, useEffect } from "react";
 import { convertToRaw, Editor, EditorState, RichUtils, convertFromHTML, ContentState, AtomicBlockUtils } from "draft-js";
 import { Link } from "react-router-dom";
 import ReactDOM from "react-dom";
-import TextEditor from "../wysiwyg/editor";
+
 import draftToHTML from "draftjs-to-html";
+
 const EditSideBar = (content) => {
-    return (<div className="card">
+    return (<div className="card mt-1">
         <div className="card-body border">
             <div className="row mx-auto">
                 <div className="col">
@@ -24,9 +25,6 @@ const EditSideBar = (content) => {
             <p className="card-text"><i className="fas fa-map-pin mr-2 text-muted"></i>
                 <span className="text-muted">Status:</span>
                 UDFN {content.status}</p>
-            <p className="card-text"><i className="fas fa-eye mr-2 text-muted"></i>
-                <span className="text-muted">Visibility:</span>
-                {content.visibility} <a href="#"><small><u>Edit</u></small></a></p>
             <p className="card-text"><i className="fas fa-redo-alt mr-2 text-muted"></i>
                 <span className="text-muted">Revisions:</span>
                                         4 <a href="#"><small><u>Browse</u></small></a></p>
@@ -108,8 +106,6 @@ const EditSideBar = (content) => {
     </div>)
 }
 
-
-
 const ContentForm = (props) => {
 
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -118,6 +114,8 @@ const ContentForm = (props) => {
     const onChange = editorState => {
         setEditorState(editorState);
     }
+
+    const [isToggled, setToggled] = useState(false);
 
     const handleKeyCommand = (command, editorState) => {
         const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -179,16 +177,46 @@ const ContentForm = (props) => {
         e.preventDefault();
         setEditorState(RichUtils.toggleBlockType(editorState, "header-six"));
     }
-    const _onRightClick = (e) => {
+    const _onCenterClick = (e) => {
         e.preventDefault();
-        setEditorState(RichUtils.toggleBlockType(editorState, "right"));
+        console.log("Supposed to center");
+        setEditorState(RichUtils.toggleBlockType(editorState, "centerAlign"));
     }
 
+    const toggleTrueFalse = (e) => {
+        e.preventDefault();
+        setToggled(!isToggled);
+    }
+    const determineIcon = (isToggled) => {
+        if (isToggled === true) {
+            return "fas fa-eye";
+        }
+        else if (isToggled === false) {
+            return "fas fa-eye-slash";
+        }
+    }
 
+    const determineColor = (isToggled) => {
+        if (isToggled === true) {
+            return "btn btn-success btn-sm";
+        }
+        else if (isToggled === false) {
+            return "btn btn-danger btn-sm";
+        }
+    }
+
+    const NeworUpdate = (props) => {
+        if (props.match.params.id) {
+            return "Update";
+        }
+        return "Create";
+    }
 
     const titleRef = useRef();
     const subtitleRef = useRef();
     const viewRef = useRef();
+    const layoutRef = useRef();
+
 
 
     const handleSubmit = async (contentId) => {
@@ -201,6 +229,7 @@ const ContentForm = (props) => {
             title: titleRef.current.value,
             subtitle: subtitleRef.current.value,
             view: viewRef.current.value,
+            layout: layoutRef.current.value,
             createdBy: 1,
             updatedBy: 1,
             directory: `/${props.labels.plural.toLowerCase()}`,
@@ -261,25 +290,41 @@ const ContentForm = (props) => {
         <Fragment>
             <div className="row mx-auto">
                 <div className="col-9">
-                    <div className="card">
-                        <div className="card-header">
-                            Featured
-                </div>
+                    <div className="card mt-1">
+                        <div className="d-flex justify-content-around card-header bg-info text-light">
+                            <h4>{`${NeworUpdate(props)} Content`}</h4>
+                            {/* <button className={`btn ${determineToggleButtonColor} btn-sm`} onClick={_onTogglePublishClick}><i className={`${determineToggleButtonIcon} text-light`}></i></button> */}
+                        </div>
                         <div className="card-body">
                             <form>
+                                <div className="d-flex justify-content-end">
+                                    <button className={determineColor(isToggled)} onClick={toggleTrueFalse}><i className={determineIcon(isToggled)}></i></button>
+                                </div>
                                 <div className="form-group">
                                     <label htmlFor="title">Title</label>
                                     <input type="text" ref={titleRef} className="form-control" id="title" aria-describedby="titleHelp" placeholder="Enter title" />
                                     <small id="titleHelp" className="form-text text-muted">This is required</small>
                                 </div>
-                                <div className="form-group">
-                                    <label htmlFor="view">View</label>
-                                    <select name="view" ref={viewRef}>
-                                        <option value="Home">Home</option>
-                                        <option value="Inner">Inner</option>
-                                        <option value="Blog">Blog</option>
-                                    </select>
-                                    <small id="titleHelp" className="form-text text-muted">This is required</small>
+                                <div className="row">
+
+                                    <div className="form-group col">
+                                        <label htmlFor="view">View</label>
+                                        <select name="view" className="custom-select" ref={viewRef}>
+                                            <option value="Home">Home</option>
+                                            <option value="Inner">Inner</option>
+                                            <option value="Blog">Blog</option>
+                                        </select>
+                                        <small className="form-text text-muted">This is required</small>
+                                    </div>
+                                    <div className="form-group col">
+                                        <label htmlFor="layout">Layout</label>
+                                        <select name="layout" className="custom-select" ref={layoutRef}>
+                                            <option value="Layout1">Layout1</option>
+                                            <option value="Layout2">Layout2</option>
+                                            <option value="Layout3">Layout3</option>
+                                        </select>
+                                        <small className="form-text text-muted">This is required</small>
+                                    </div>
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="subitle">Subtitle</label>
@@ -287,8 +332,6 @@ const ContentForm = (props) => {
                                     <small id="subtitleHelp" className="form-text text-muted">This is optional</small>
                                 </div>
                                 <div className="form-group">
-                                    {/* Wysiwyg is being a nuisance */}
-                                    {/* <TextEditor initialValue={contentForm.content} /> */}
                                     <div className="card">
                                         <div className="card-header">
                                             <button className="btn btn-light btn-sm border mx-2" onClick={_onBoldClick}><i className="fas fa-bold"></i></button>
@@ -297,20 +340,12 @@ const ContentForm = (props) => {
                                             <button className="btn btn-light btn-sm border mx-2" onClick={_onCodeClick}><i className="fas fa-code"></i></button>
                                             <button className="btn btn-light btn-sm border mx-2" onClick={_onUnorderedClick}><i className="fas fa-list-ul"></i></button>
                                             <button className="btn btn-light btn-sm border mx-2" onClick={_onOrderedClick}><i className="fas fa-list-ol"></i></button>
-                                            {/* <button className="btn btn-light btn-sm border mx-2" onClick={}><i className="fas fa-image"></i></button> */}
                                             <button className="btn btn-light btn-sm border mx-2" onClick={_onHeaderOneClick}>H1</button>
                                             <button className="btn btn-light btn-sm border mx-2" onClick={_onHeaderTwoClick}>H2</button>
                                             <button className="btn btn-light btn-sm border mx-2" onClick={_onHeaderThreeClick}>H3</button>
                                             <button className="btn btn-light btn-sm border mx-2" onClick={_onHeaderFourClick}>H4</button>
                                             <button className="btn btn-light btn-sm border mx-2" onClick={_onHeaderFiveClick}>H5</button>
                                             <button className="btn btn-light btn-sm border mx-2" onClick={_onHeaderSixClick}>H6</button>
-                                            {/* <button className="btn btn-light btn-sm border mx-2" onClick={_onRightClick}><i className="fas fa-align-right"></i></button> */}
-
-                                            {/* <button className="btn btn-light btn-sm border mx-2" onClick={_onAlignLeftClick}><i class="fas fa-align-left"></i></button>
-                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onAlignCenterClick}><i class="fas fa-align-center"></i></button>
-                                            <button className="btn btn-light btn-sm border mx-2" onClick={_onAlignRightClick}><i className="fas fa-align-right"></i></button> */}
-                                            {/* <button className="btn btn-light btn-sm border mx-2" onClick={_onLinkClick.bind(editorState)}><i className="fas fa-link"></i></button> */}
-                                            {/* <button className="btn btn-light btn-sm border mx-2" onClick={addImage.bind(editorState)}><i className="fas fa-image"></i></button> */}
                                         </div>
                                         <div className="card-body" onClick={focusEditor}>
                                             <Editor ref={editor} editorState={editorState} onChange={onChange} handleKeyCommand={handleKeyCommand} />
@@ -320,7 +355,7 @@ const ContentForm = (props) => {
 
                                 <div className="row mx-auto">
                                     <div className="col-6">
-                                        <button type="button" onClick={() => handleSubmit(+props.match.params.id)} className="btn btn-primary">Update</button>
+                                        <button type="button" onClick={() => handleSubmit(+props.match.params.id)} className="btn btn-primary">{NeworUpdate(props)}</button>
                                     </div>
                                     <div className="col-6 d-flex justify-content-end">
                                         {/* <Link to={`/${props.labels.plural.toLowerCase()}`} className="btn btn-danger" onClick={props.deleteContent(contentForm.id)}>Delete</Link> */}

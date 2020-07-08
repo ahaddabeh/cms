@@ -136,32 +136,12 @@ const ContentDetails = (props) => {
 
 
                     <h1 className="my-3">{contentDetails.title}</h1>
-                    <p className="text-muted mb-2"><strong>Permalink: </strong>http://10.0.1.138:8888/slate/?p=1
-                                <span>
-                            <button className="btn btn-light btn-sm border">Change Permalinks</button>
-                            <button className="btn btn-light btn-sm border">View {props.labels.singular}</button>
-                        </span>
-                    </p>
-                    <div className="row">
-                        <div className="col">
-                            <button className="btn btn-light btn-sm border"><i className="fas fa-camera ml-2"></i> Add
-                                        Media</button>
-                        </div>
-                        <div className="col d-flex justify-content-end">
-                            <button className="btn btn-light btn-sm border">Visual</button>
-                            <button className="btn btn-light btn-sm border">Text</button>
-                        </div>
-                    </div>
-                    <div>
+                    <h3 className="my-3">{contentDetails.subtitle}</h3>
 
-                    </div>
+                    {contentDetails.content}
                 </div>
 
                 {console.log(contentDetails)}
-
-                <div className="col-3">
-                    {EditSideBar()}
-                </div>
             </div>
         </Fragment>
     )
