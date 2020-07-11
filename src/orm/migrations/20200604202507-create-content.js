@@ -81,6 +81,12 @@ module.exports = {
         field: "is_permanent",
         defaultValue: 0
       },
+      isPublished: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        field: "is_published",
+        defaultValue: false
+      },
       publishedOn: {
         allowNull: true,
         type: Sequelize.DATE,

@@ -5,6 +5,15 @@ const listGroupStyle = {
     width: "90%"
 }
 
+const determineIcon = (isPublished) => {
+    if (isPublished === true) {
+        return "fas fa-eye text-success";
+    }
+    else if (isPublished === false) {
+        return "fas fa-eye-slash text-danger";
+    }
+}
+
 const displayContent = (contentArray, contentType, deleteFunction) => {
     // const displayContent = (contentArray, contentType) => {
     return (contentArray.map((cont) =>
@@ -20,7 +29,7 @@ const displayContent = (contentArray, contentType, deleteFunction) => {
                     </div>
                 </div>
                 <div className="col-3 d-flex justify-content-between">
-                    <p className="bg-secondary text-light">PUBLISHED</p>
+                    <i className={determineIcon(cont.isPublished)}></i>
                     <p>a year ago</p>
                 </div>
             </div>

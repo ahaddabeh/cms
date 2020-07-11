@@ -2,7 +2,7 @@ import React, { useRef, Fragment, useState, useEffect } from "react";
 import { convertToRaw, Editor, EditorState, RichUtils, convertFromHTML, ContentState, AtomicBlockUtils } from "draft-js";
 import { Link } from "react-router-dom";
 import ReactDOM from "react-dom";
-
+import RJSModal from "./Modal";
 import draftToHTML from "draftjs-to-html";
 
 const EditSideBar = (content) => {
@@ -183,28 +183,6 @@ const ContentForm = (props) => {
         setEditorState(RichUtils.toggleBlockType(editorState, "centerAlign"));
     }
 
-    const toggleTrueFalse = (e) => {
-        e.preventDefault();
-        setToggled(!isToggled);
-    }
-    const determineIcon = (isToggled) => {
-        if (isToggled === true) {
-            return "fas fa-eye";
-        }
-        else if (isToggled === false) {
-            return "fas fa-eye-slash";
-        }
-    }
-
-    const determineColor = (isToggled) => {
-        if (isToggled === true) {
-            return "btn btn-success btn-sm";
-        }
-        else if (isToggled === false) {
-            return "btn btn-danger btn-sm";
-        }
-    }
-
     const NeworUpdate = (props) => {
         if (props.match.params.id) {
             return "Update";
@@ -217,13 +195,13 @@ const ContentForm = (props) => {
     const viewRef = useRef();
     const layoutRef = useRef();
 
-
+    const rawContentPreview = convertToRaw(editorState.getCurrentContent());
+    const markupPreview = draftToHTML(rawContentPreview);
 
     const handleSubmit = async (contentId) => {
         const rawContentState = convertToRaw(editorState.getCurrentContent());
         const markup = draftToHTML(rawContentState);
         console.log("Here are the blocks", markup);
-        console.log("Views select thing:", viewRef.current.value)
         const content_data = {
             contentTypeId: props.labels.type,
             title: titleRef.current.value,
@@ -234,7 +212,8 @@ const ContentForm = (props) => {
             updatedBy: 1,
             directory: `/${props.labels.plural.toLowerCase()}`,
             content: markup,
-            categoryId: 0
+            categoryId: 0,
+            isPublished: isToggled
         }
 
         // Todo: determine if the record exists or if we are inserting a new record
@@ -256,6 +235,8 @@ const ContentForm = (props) => {
         if (props.match.params.id) {
             const data = await props.fetchDetails(props.match.params.id);
             setContentForm(data.data);
+            setToggled(contentForm.isPublished);
+            console.log(isToggled);
             if (data.data.content.length) {
                 const blocksFromHTML = convertFromHTML(data.data.content);
                 const state = ContentState.createFromBlockArray(
@@ -282,9 +263,33 @@ const ContentForm = (props) => {
         }
     }
 
+    const toggleTrueFalse = (e) => {
+        e.preventDefault();
+        setToggled(!isToggled);
+        console.log(isToggled);
+    }
+    const determineIcon = (isToggled) => {
+        if (isToggled === true) {
+            return "fas fa-eye";
+        }
+        else if (isToggled === false) {
+            return "fas fa-eye-slash";
+        }
+    }
+    const determineColor = (isToggled) => {
+        if (isToggled === true) {
+            return "btn btn-success btn-sm";
+        }
+        else if (isToggled === false) {
+            return "btn btn-danger btn-sm";
+        }
+    }
+
     if (props.match.params.id) {
         setFormValues();
     }
+
+
 
     return (
         <Fragment>
@@ -297,7 +302,8 @@ const ContentForm = (props) => {
                         </div>
                         <div className="card-body">
                             <form>
-                                <div className="d-flex justify-content-end">
+                                <div className="d-flex justify-content-around">
+                                    <RJSModal htmlPreview={markupPreview} />
                                     <button className={determineColor(isToggled)} onClick={toggleTrueFalse}><i className={determineIcon(isToggled)}></i></button>
                                 </div>
                                 <div className="form-group">
