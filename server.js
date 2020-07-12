@@ -1,9 +1,8 @@
+const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
-const path = require("path");
 const cors = require("cors");
-const handlebars = require("express-handlebars"); // I think
-
+const findContent = require("./src/findContent");
 
 require("dotenv").config();
 
@@ -11,15 +10,12 @@ const PORT = process.env.PORT || 3500;
 const HOST = process.env.HOST || "127.0.0.1";
 const app = express();
 
+app.use(express.static(path.join(__dirname, "public")))
+
 // body parser parses json and non-json requests extracting params...
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(cors());
-
-app.get("/", (req, res) => {
-    res.send("It's working...");
-})
 
 
 // Authentication middleware will go here
@@ -34,6 +30,12 @@ app.use("/api/categories", require("./src/api/routes/private/categories"));
 app.use("/api/tags", require("./src/api/routes/private/tags"));
 app.use("/api/content", require("./src/api/routes/private/content"));
 app.use("/api/content-types", require("./src/api/routes/private/contentTypes"));
+
+app.get("*", (req, res) => {
+    const result = findContent(req.path, req.originalUrl);
+    res.status(result.status).send(result.content);
+})
+
 
 app.listen(PORT, HOST, () => console.log(`JSON app is running on port::http://${HOST}:${PORT}`))
 
