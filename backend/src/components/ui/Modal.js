@@ -17,7 +17,7 @@ const RJSModal = ({ htmlPreview }) => {
         <div>
             <button className="btn btn-primary" onClick={handleOpenModal}>Preview</button>
             <ReactModal isOpen={showModal} contentLabel="Minimal Modal Example">
-                <button onClick={handleCloseModal}>Close Modal</button>
+                <button className="btn btn-primary" onClick={handleCloseModal}>Close Modal</button>
                 <div dangerouslySetInnerHTML={{ __html: `${htmlPreview}` }} />
             </ReactModal>
         </div>
