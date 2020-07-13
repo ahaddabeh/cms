@@ -51,7 +51,8 @@ const createContent = (title, directory, slug, contentTypeId, categoryId, option
         subtitle: faker.lorem.words(getRandomInclusive(3, 7)),
         content: content || (hasContent && generateHTMLContent()) || null,
         directory,
-        slug
+        slug,
+        layout: options.layout || "default.md"
     }
 }
 
@@ -95,7 +96,7 @@ categoriesArray.forEach(cat => {
     for (let i = 0; i < getRandomInclusive(20, 40); i++) {
         // (title, directory, slug, contentTypeId, categoryId, options = {})
         __slug__ = faker.lorem.slug();
-        __content__ = createContent(__slug__.split("-").join(" "), `/${cat.category}`, __slug__, 1, cat.id);
+        __content__ = createContent(__slug__.split("-").join(" "), `/${cat.category}`, __slug__, 1, cat.id, { layout: cat.category.toLowerCase() + ".md" });
         __tags__ = getRandomTags();
         OUTPUT.content.push({ ...__content__, tags: __tags__ })
         __tags__.map(tag => OUTPUT.content_tags.push({ contentId: __content__.id, tagId: tag.id }));

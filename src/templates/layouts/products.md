@@ -1,5 +1,5 @@
 ---
-title: My default website
+title: My product website
 ---
 <!doctype html>
 <html lang="en">

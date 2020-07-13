@@ -31,7 +31,8 @@ const content = data.content.map(it => (
     slug: it.slug,
     directory: it.directory.toLowerCase(),
     content: it.content,
-    filepath: `${it.directory.toLowerCase()}/${it.slug}`.replace("//", "/").replace("/index", "/")
+    filepath: `${it.directory.toLowerCase()}/${it.slug}`.replace("//", "/").replace("/index", "/"),
+    layout: it.layout
   })
 )
 

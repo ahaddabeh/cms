@@ -31,8 +31,20 @@ app.use("/api/tags", require("./src/api/routes/private/tags"));
 app.use("/api/content", require("./src/api/routes/private/content"));
 app.use("/api/content-types", require("./src/api/routes/private/contentTypes"));
 
+function ignoreFavicon(req, res, next) {
+    if (req.originalUrl === '/favicon.ico') {
+        res.status(204).json({ nope: true });
+    } else {
+        next();
+    }
+}
+then:
+
+app.use(ignoreFavicon);
+
 app.get("*", (req, res) => {
     const result = findContent(req.path, req.originalUrl);
+    console.log(req.path, req.originalUrl);
     res.status(result.status).send(result.content);
 })
 
