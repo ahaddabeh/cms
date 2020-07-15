@@ -20,7 +20,8 @@ const routes = [
         exact: true,
         component: Home,
         navlabel: "Home",
-        navorder: 0
+        navorder: 0,
+        icon: "fas fa-home"
     },
     {
         path: "/pages",
@@ -29,6 +30,7 @@ const routes = [
         labels: { plural: "Pages", singular: "Page" },
         navlabel: "Pages",
         navorder: 1,
+        icon: "fas fa-file",
         fetchContent: async (params = {}) => await _fetchAll("/api/pages", params),
         deleteContent: async (id) => await _delete(`/api/pages/${id}`)
     },
@@ -39,6 +41,7 @@ const routes = [
         labels: { plural: "Categories", singular: "Category" },
         navlabel: "Categories",
         navorder: 2,
+        icon: "fas fa-clipboard-list",
         fetchContent: async (params = {}) => await _fetchAll("/api/categories", params),
         deleteContent: async (id) => await _delete(`/api/categories/${id}`)
     },
@@ -49,6 +52,7 @@ const routes = [
         labels: { plural: "Tags", singular: "Tag" },
         navlabel: "Tags",
         navorder: 3,
+        icon: "fas fa-tags",
         fetchContent: async (params = {}) => await _fetchAll("/api/tags", params),
         deleteContent: async (id) => await _delete(`/api/tags/${id}`)
     },
@@ -58,6 +62,7 @@ const routes = [
         component: Users,
         navlabel: "Users",
         navorder: 4,
+        icon: "fas fa-user",
         fetchUsers: async (params = {}) => await _fetchAll("/api/users", params),
         deleteUser: async (id) => await _delete(`/api/users/${id}`)
     },

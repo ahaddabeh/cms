@@ -325,9 +325,11 @@ const ContentForm = (props) => {
                                     <div className="form-group col">
                                         <label htmlFor="layout">Layout</label>
                                         <select name="layout" className="custom-select" ref={layoutRef}>
-                                            <option value="Layout1">Layout1</option>
-                                            <option value="Layout2">Layout2</option>
-                                            <option value="Layout3">Layout3</option>
+                                            <option value="default.md">Default</option>
+                                            <option value="products.md">Products</option>
+                                            <option value="services.md">Services</option>
+                                            <option value="stories.md">Stories</option>
+                                            <option value="blog.md">Blogs</option>
                                         </select>
                                         <small className="form-text text-muted">This is required</small>
                                     </div>

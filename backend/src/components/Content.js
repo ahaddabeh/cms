@@ -76,7 +76,7 @@ const Content = (props) => {
                     <h2>{props.labels.plural}</h2>
                 </div>
                 <div className="row mx-auto">
-                    <Link to={`/${props.labels.singular.toLowerCase()}`}><button className="btn btn-sm btn-success">New {props.labels.singular}</button></Link>
+                    <Link to={`/${props.labels.singular.toLowerCase()}`}><button className="btn btn-sm btn-success">New {props.labels.singular}+</button></Link>
                 </div>
             </div>
             <div className="d-flex justify-content-center">

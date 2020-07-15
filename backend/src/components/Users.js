@@ -64,7 +64,7 @@ const Users = (props) => {
                     <h2>Users</h2>
                 </div>
                 <div className="row mx-auto">
-                    <Link to="/user"><button className="btn btn-sm btn-success">New User</button></Link>
+                    <Link to="/user"><button className="btn btn-sm btn-success">New User+</button></Link>
                 </div>
             </div>
             <div className="d-flex justify-content-center">

@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { NavLink, Link } from "react-router-dom";
 import routes from "../../routes";
+import "../../../assets/sidebar.css"
 
 const buildNavBarItems = () => {
     return routes
@@ -9,7 +10,7 @@ const buildNavBarItems = () => {
             return (
                 <li className="nav-item">
                     <NavLink className="nav-link text-light" key={route.navlabel} to={route.path} aria-expanded="false"
-                    >{route.navlabel}</NavLink>
+                    >{route.navlabel} <i className={route.icon}></i></NavLink>
                 </li>
             )
         })
@@ -20,9 +21,9 @@ const buildSideBarItems = () => {
         .filter(route => route.hasOwnProperty("navlabel"))
         .map(route => {
             return (
-                <li className="nav-item list-group-item bg-dark">
+                <li className="nav-item list-group-item bg-primary">
                     <NavLink className="nav-link text-light" key={route.navlabel} to={route.path} aria-expanded="false"
-                    >{route.navlabel}</NavLink>
+                    >{route.navlabel} <i className={route.icon}></i></NavLink>
                 </li>
             )
         })
@@ -34,15 +35,19 @@ const Layout = (props) => {
         <Fragment>
             <div className="d-flex flex-column">
                 <div className="row no-gutters min-vh-100 bg-light">
-                    <div className="col-3 p-1 bg-dark text-white">
-                        <h3 className="text-center">Sidebar</h3>
-                        <ul className="nav flex-column border-bottom">
+                    <div className="col-3 p-1 bg-primary text-white">
+                        <h3 className="text-center">CMS <i className="fas fa-wrench"></i></h3>
+                        <ul className="nav flex-column">
                             {buildSideBarItems()}
+                            <li className="nav-item list-group-item bg-primary">
+                                <NavLink className="nav-link text-light" key="logout_logout_" to="#" aria-expanded="false"
+                                >Logout <i className="fas fa-sign-out-alt"></i></NavLink>
+                            </li>
                         </ul>
                     </div>
                     <div className="col-9">
-                        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-                            <a className="navbar-brand" to="#"><i className="fas fa-user-cog"></i> Welcome Admin</a>
+                        <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+                            <a className="navbar-brand" to="#">Welcome Admin <i className="fas fa-user-cog"></i></a>
                             <button className="navbar-toggler" type="button" data-toggle="collapse"
                                 data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                                 aria-expanded="false" aria-label="Toggle navigation">
@@ -51,10 +56,14 @@ const Layout = (props) => {
 
                             <div className="collapse navbar-collapse" id="navbarSupportedContent">
                                 <ul className="navbar-nav mr-auto">
-                                    {buildNavBarItems()}                                </ul>
+                                    {buildNavBarItems()}
+                                    <li className="nav-item">
+                                        <NavLink className="nav-link text-light" key="logout_logout_" to="#" aria-expanded="false"
+                                        >Logout <i className="fas fa-sign-out-alt"></i></NavLink>
+                                    </li>                                </ul>
                                 <form className="form-inline my-2 my-lg-0">
                                     <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-                                    <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                                    <button className="btn btn-outline-light my-2 my-sm-0" type="submit">Search <i className="fas fa-search"></i></button>
                                 </form>
                             </div>
                         </nav>
