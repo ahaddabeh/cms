@@ -98,7 +98,6 @@ module.exports = (sequelize, DataTypes) => {
     instance.title = instance.title.replace(/\b[a-zA-z]/g, match => match.toUpperCase());
     instance.slug = `${instance.title.replace(/\s+/g, "-").toLowerCase()}`;
     instance.filepath = instance.directory + "/" + instance.slug;
-    instance.layout = instance.category.toLowerCase() + ".md"
   });
   return Content;
 };
