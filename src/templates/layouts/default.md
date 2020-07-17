@@ -15,6 +15,7 @@ title: My default website
     <title>{{{title}}}</title>
   </head>
   <body>
+  <h1 class="badge">Default Layout</h1>
     {{{body}}}
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

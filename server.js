@@ -2,7 +2,8 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const findContent = require("./src/findContent");
+// destructuring and renaming render to findContent
+const { render: findContent } = require("./src/findContent");
 
 require("dotenv").config();
 
@@ -30,6 +31,7 @@ app.use("/api/categories", require("./src/api/routes/private/categories"));
 app.use("/api/tags", require("./src/api/routes/private/tags"));
 app.use("/api/content", require("./src/api/routes/private/content"));
 app.use("/api/content-types", require("./src/api/routes/private/contentTypes"));
+app.use("/api/render-preview", require("./src/api/routes/private/preview"));
 
 function ignoreFavicon(req, res, next) {
     if (req.originalUrl === '/favicon.ico') {
@@ -38,13 +40,13 @@ function ignoreFavicon(req, res, next) {
         next();
     }
 }
-then:
-
 app.use(ignoreFavicon);
 
-app.get("*", (req, res) => {
-    const result = findContent(req.path, req.originalUrl);
-    console.log(req.path, req.originalUrl);
+
+
+app.get("*", async (req, res) => {
+    const result = await findContent(req.path, req.originalUrl);
+    console.log("Server result", result);
     res.status(result.status).send(result.content);
 })
 

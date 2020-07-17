@@ -13,6 +13,9 @@ const RJSModal = ({ htmlPreview }) => {
         setShowModal(false);
     }
 
+
+
+
     return (
         <div>
             <button className="btn btn-primary" onClick={handleOpenModal}>Preview</button>

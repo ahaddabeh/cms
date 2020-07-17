@@ -76,6 +76,7 @@ const tags = Array.from(new Set(Array.from({ length: 20 }, () => faker.lorem.wor
 OUTPUT.content = []
 
 OUTPUT.content.push(createContent("Home", "/", "index", 1, 0, { isPermanent: 1, hasContent: true }))
+OUTPUT.content.push(createContent("404", "/", "404", 1, 0, { isPermanent: 1, hasContent: true, content: "<h1>404</h1>" }))
 OUTPUT.content.push(createContent("About", "/", "about", 1, 0))
 OUTPUT.content.push(createContent("Contact", "/", "contact", 1, 0))
 categories.forEach(it => OUTPUT.content.push(createContent(it, "/", it.toLowerCase(), 2, 0)))

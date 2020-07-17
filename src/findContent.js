@@ -36,19 +36,34 @@ const findInstance = (id) => {
 }
 
 
-const contentFinder = async (id) => {
-    const content = await db.Content.findByPk(id);
-    return content;
+const contentFinder = async (_filepath) => {
+    const content = await db.Content.findOne({
+        where: {
+            filepath: _filepath
+        }
+    });
+    if (!content) {
+        return await db.Content.findOne({
+            where: {
+                filepath: "/404"
+            }
+        })
+    }
+    return content.toJSON();
 }
 
-module.exports = (_path, _originalUrl) => {
-    // We need to get a handle of the route
-    console.log(_path, _originalUrl);
-    const contentID = desiredContent(_originalUrl);
-    const getContent = contentFinder(+contentID);
-    console.log("Here's the content", getContent)
-    const layout = extractFrontMatter(`./templates/layouts/default.md`);
-    // Take the extracted route and query the database
-    // Return the content with a status code
-    return { status: 200, content: compile(layout.body, { ...layout.attributes, title: getContent.title, body: getContent.content, subtitle: getContent.subtitle, }) };
+module.exports = {
+    render: async (_path, _originalUrl) => {
+        // We need to get a handle of the route
+        const getContent = await contentFinder(_path);
+        const layout = extractFrontMatter(`./templates/layouts/default.md`);
+        // Take the extracted route and query the database
+        // Return the content with a status code
+        return { status: 200, content: compile(layout.body, { ...layout.attributes, title: getContent.title, body: getContent.content, subtitle: getContent.subtitle, }) };
+    },
+    preview: async (_data) => {
+        const layout = extractFrontMatter(`./templates/layouts/default.md`);
+        const content = compile(layout.body, { ...layout.attributes, title: _data.title, body: _data.content, subtitle: _data.subtitle, });
+        return { status: 200, content: content }; // We might need escape(content)
+    }
 }

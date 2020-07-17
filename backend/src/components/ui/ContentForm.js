@@ -109,13 +109,16 @@ const EditSideBar = (content) => {
 const ContentForm = (props) => {
 
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
+    const [isToggled, setToggled] = useState(false);
     const editor = useRef(null);
     const focusEditor = () => editor.current.focus();
     const onChange = editorState => {
         setEditorState(editorState);
     }
-
-    const [isToggled, setToggled] = useState(false);
+    const titleRef = useRef();
+    const subtitleRef = useRef();
+    const viewRef = useRef();
+    const layoutRef = useRef();
 
     const handleKeyCommand = (command, editorState) => {
         const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -177,12 +180,8 @@ const ContentForm = (props) => {
         e.preventDefault();
         setEditorState(RichUtils.toggleBlockType(editorState, "header-six"));
     }
-    const _onCenterClick = (e) => {
-        e.preventDefault();
-        console.log("Supposed to center");
-        setEditorState(RichUtils.toggleBlockType(editorState, "centerAlign"));
-    }
 
+    // This is just so the button and header can say different things depending on if we're creating or updating content
     const NeworUpdate = (props) => {
         if (props.match.params.id) {
             return "Update";
@@ -190,18 +189,16 @@ const ContentForm = (props) => {
         return "Create";
     }
 
-    const titleRef = useRef();
-    const subtitleRef = useRef();
-    const viewRef = useRef();
-    const layoutRef = useRef();
-
     const rawContentPreview = convertToRaw(editorState.getCurrentContent());
     const markupPreview = draftToHTML(rawContentPreview);
+
+    const handlePreview = async () => {
+
+    }
 
     const handleSubmit = async (contentId) => {
         const rawContentState = convertToRaw(editorState.getCurrentContent());
         const markup = draftToHTML(rawContentState);
-        console.log("Here are the blocks", markup);
         const content_data = {
             contentTypeId: props.labels.type,
             title: titleRef.current.value,
@@ -215,11 +212,9 @@ const ContentForm = (props) => {
             categoryId: 0,
             isPublished: isToggled
         }
-
         // Todo: determine if the record exists or if we are inserting a new record
         // If record has an id, method = patch. else, it's a new record and we post
         if (contentId && contentId > 0) {
-            console.log("We should be patching");
             await props.saveContent({ ...content_data, id: contentId }, "patch");
         }
         else {
@@ -230,6 +225,7 @@ const ContentForm = (props) => {
     }
 
     const [contentForm, setContentForm] = useState({});
+
 
     const updateContentForm = async () => {
         if (props.match.params.id) {
@@ -247,10 +243,12 @@ const ContentForm = (props) => {
             }
         }
     }
+
     useEffect(() => {
         updateContentForm();
         focusEditor();
     }, [props.match.params.id])
+
     const setFormValues = async () => {
         if (titleRef && titleRef.current) {
             titleRef.current.value = contentForm.title || "";
@@ -268,6 +266,7 @@ const ContentForm = (props) => {
         setToggled(!isToggled);
         console.log(isToggled);
     }
+
     const determineIcon = (isToggled) => {
         if (isToggled === true) {
             return "fas fa-eye";
@@ -276,6 +275,7 @@ const ContentForm = (props) => {
             return "fas fa-eye-slash";
         }
     }
+
     const determineColor = (isToggled) => {
         if (isToggled === true) {
             return "btn btn-success btn-sm";
@@ -288,8 +288,6 @@ const ContentForm = (props) => {
     if (props.match.params.id) {
         setFormValues();
     }
-
-
 
     return (
         <Fragment>
@@ -363,7 +361,7 @@ const ContentForm = (props) => {
 
                                 <div className="row mx-auto">
                                     <div className="col-6">
-                                        <button type="button" onClick={() => handleSubmit(+props.match.params.id)} className="btn btn-primary">{NeworUpdate(props)}</button>
+                                        <Link to={`/${props.labels.plural.toLowerCase()}`} onClick={() => handleSubmit(+props.match.params.id)} className="btn btn-primary">{NeworUpdate(props)}</Link>
                                     </div>
                                     <div className="col-6 d-flex justify-content-end">
                                         {/* <Link to={`/${props.labels.plural.toLowerCase()}`} className="btn btn-danger" onClick={props.deleteContent(contentForm.id)}>Delete</Link> */}

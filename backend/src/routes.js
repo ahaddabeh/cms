@@ -72,6 +72,7 @@ const routes = [
         labels: { plural: "Pages", singular: "Page", type: 1 },
         component: ContentForm,
         saveContent: async (data, method = "post") => await _save("/api/pages", data, method),
+        previewContent: async (params) => await _fetchOne("/api/render-preview", params),
         fetchDetails: async (id) => await _fetchOne(`/api/pages/${id}`),
         deleteContent: async (id) => await _delete(`/api/pages/${id}`)
     },

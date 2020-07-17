@@ -4,7 +4,9 @@ import routes from "../../routes";
 import "../../../assets/sidebar.css"
 
 const NavAndSideBgColor = {
-    background: "#20B2AA"
+    // background: "#20B2AA"
+    background: "#0000CD"
+
 }
 
 const buildNavBarItems = () => {
