@@ -2,9 +2,9 @@ import React, { useRef, Fragment, useState, useEffect } from "react";
 import { convertToRaw, Editor, EditorState, RichUtils, convertFromHTML, ContentState, AtomicBlockUtils } from "draft-js";
 import { Link } from "react-router-dom";
 import ReactDOM from "react-dom";
-import RJSModal from "./Modal";
+// import RJSModal from "./Modal";
 import draftToHTML from "draftjs-to-html";
-
+import ReactModal from "react-modal";
 const EditSideBar = (content) => {
     return (<div className="card mt-1">
         <div className="card-body border">
@@ -31,7 +31,6 @@ const EditSideBar = (content) => {
             <p className="card-text"><i className="fas fa-calendar-alt mr-2 text-muted"></i>
                 <span className="text-muted">Published On:</span>
                 {content.publishedOn}
-                {console.log("Content in the edit sidebar function", content)}
                 {/* <a href="#"><small><u>Edit</u></small></a> */}
             </p>
 
@@ -105,6 +104,8 @@ const EditSideBar = (content) => {
         </div>
     </div>)
 }
+
+
 
 const ContentForm = (props) => {
 
@@ -189,12 +190,43 @@ const ContentForm = (props) => {
         return "Create";
     }
 
+
+
     const rawContentPreview = convertToRaw(editorState.getCurrentContent());
     const markupPreview = draftToHTML(rawContentPreview);
 
-    const handlePreview = async () => {
 
+    const [showModal, setShowModal] = useState(false);
+
+    const handleOpenModal = () => {
+        setShowModal(true);
+        console.log("From handleOpenModal", showModal)
     }
+    const handleCloseModal = () => {
+        setShowModal(false);
+        console.log("From handleCloseModal", showModal)
+    }
+    const handlePreview = async () => {
+        const preview_data = {
+            title: titleRef.current.value,
+            subtitle: subtitleRef.current.value,
+            view: viewRef.current.value,
+            layout: layoutRef.current.value,
+            content: markupPreview
+        }
+        const data = await props.previewContent(preview_data);
+        console.log("This is from the content form", data);
+        return (<div>
+            <Link className="btn btn-primary" onClick={handleOpenModal}>Preview</Link>
+            <ReactModal isOpen={showModal} contentLabel="Minimal Modal Example">
+                <Link className="btn btn-primary" onClick={handleCloseModal}>Close Modal</Link>
+                <div dangerouslySetInnerHTML={{ __html: `${data.data}` }} />
+                {console.log("This is from the modal", data.data)}
+            </ReactModal>
+        </div>)
+    }
+
+
 
     const handleSubmit = async (contentId) => {
         const rawContentState = convertToRaw(editorState.getCurrentContent());
@@ -301,8 +333,19 @@ const ContentForm = (props) => {
                         <div className="card-body">
                             <form>
                                 <div className="d-flex justify-content-around">
-                                    <RJSModal htmlPreview={markupPreview} />
+                                    {}
+                                    {/* <div>
+                                        <Link className="btn btn-primary" onClick={handleOpenModal}>Preview</Link>
+                                        <ReactModal isOpen={showModal} contentLabel="Minimal Modal Example">
+                                            <Link className="btn btn-primary" onClick={handleCloseModal}>Close Modal</Link>
+                                            <div dangerouslySetInnerHTML={{ __html: `${async () => await Promise.resolve(handlePreview())}` }} />
+                                            {console.log("This is from the modal", async () => await Promise.resolve(handlePreview()))}
+                                        </ReactModal>
+                                    </div> */}
+
                                     <button className={determineColor(isToggled)} onClick={toggleTrueFalse}><i className={determineIcon(isToggled)}></i></button>
+
+                                    {/* <button className="btn btn-warning" onClick={handlePreview}>get preview data</button> */}
                                 </div>
                                 <div className="form-group">
                                     <label htmlFor="title">Title</label>

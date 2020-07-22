@@ -82,6 +82,7 @@ const routes = [
         labels: { plural: "Categories", singular: "Category", type: 2 },
         component: ContentForm,
         saveContent: async (data, method = "post") => await _save("/api/categories", data, method),
+        previewContent: async (params) => await _fetchOne("/api/render-preview", params),
         fetchDetails: async (id) => await _fetchOne(`/api/categories/${id}`),
         deleteContent: async (id) => await _delete(`/api/categories/${id}`)
     },
@@ -91,6 +92,7 @@ const routes = [
         component: ContentForm,
         labels: { plural: "Tags", singular: "Tag", type: 3 },
         saveContent: async (data, method = "post") => await _save("/api/tags", data, method),
+        previewContent: async (params) => await _fetchOne("/api/render-preview", params),
         fetchDetails: async (id) => await _fetchOne(`/api/tags/${id}`),
         deleteContent: async (id) => await _delete(`/api/tags/${id}`)
     },
