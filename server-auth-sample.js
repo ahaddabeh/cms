@@ -2,7 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const expressjwt = require("express-jwt");
+const jwtCheck = require("./src/api/middleware/jwtCheck");
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,18 +27,6 @@ app.use(cors());
 //      }
 // });
 
-const jwtCheck = (req, res, next) => {
-    const token = req.header("x-token");
-    jwt.verify(token, "mysupersecretkey", (error, decoded) => {
-        if (error) {
-            console.log("jwt failed", error);
-            return res.status(404).send({ ...error, msg: "Token failed login", success: true });
-        }
-        // If it token is valid, then we just call next
-        next();
-    })
-    // Todo 
-}
 
 // login returns a jwt token if the user exists
 app.post("/login", (req, res) => {
@@ -65,7 +54,6 @@ app.post("/login", (req, res) => {
     // if we made it this far it means we found the user, sign the token
     const token = jwt.sign({
         sub: user.id,
-        username: user.username,
         algorithm: "RS256"
     }, "mysupersecretkey", { expiresIn: 60 });
 

@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { NavLink, Link } from "react-router-dom";
 import routes from "../../routes";
-import "../../../assets/sidebar.css"
+// import "../../../assets/sidebar.css"
 
 const NavAndSideBgColor = {
     // background: "#20B2AA"

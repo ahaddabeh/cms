@@ -9,15 +9,16 @@ const App = () => {
     return (
         <Switch>
             {routes.map(
-                ({ path, exact, component: Component, ...rest }) => (
+                ({ path, exact, noWrap = false, component: Component, ...rest }) => (
                     <Route
                         key={path}
                         path={path}
                         exact={exact}
                         render={props => (
-                            <Layout>
+                            noWrap ?
                                 <Component {...props} {...rest} />
-                            </Layout>
+                                :
+                                <Layout><Component {...props} {...rest} /></Layout>
                         )}
                     />
                 )

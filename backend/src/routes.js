@@ -7,11 +7,13 @@ import Content from "./components/Content";
 import NoMatch from "./components/ui/NoMatch";
 import ContentForm from "./components/ui/ContentForm";
 import UserForm from "./components/ui/UserForm";
+import Login from "./components/ui/Login";
 import {
     _fetchAll,
     _fetchOne,
     _save,
-    _delete
+    _delete,
+    login
 } from "./api";
 
 const routes = [
@@ -103,6 +105,13 @@ const routes = [
         saveUser: async (data, method = "post") => await _save("/api/users", data, method),
         fetchDetails: async (id) => await _fetchOne(`/api/users/${id}`)
     },
+    {
+        path: "/login",
+        exact: true,
+        component: Login,
+        login: async (data) => await login(data),
+        noWrap: true
+    }
 
 ]
 

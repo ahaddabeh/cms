@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 // destructuring and renaming render to findContent
 const { render: findContent } = require("./src/findContent");
+const jwtCheck = require("./src/api/middleware/jwtCheck");
 
 require("dotenv").config();
 
@@ -25,13 +26,14 @@ app.use(cors());
 //     next();
 // })
 // in the require, we are essentially pulling all the routes declared in the router
-app.use("/api/users", require("./src/api/routes/private/users"));
-app.use("/api/pages", require("./src/api/routes/private/pages"));
-app.use("/api/categories", require("./src/api/routes/private/categories"));
-app.use("/api/tags", require("./src/api/routes/private/tags"));
-app.use("/api/content", require("./src/api/routes/private/content"));
-app.use("/api/content-types", require("./src/api/routes/private/contentTypes"));
-app.use("/api/render-preview", require("./src/api/routes/private/preview"));
+app.use("/api/users", jwtCheck, require("./src/api/routes/private/users"));
+app.use("/api/pages", jwtCheck, require("./src/api/routes/private/pages"));
+app.use("/api/categories", jwtCheck, require("./src/api/routes/private/categories"));
+app.use("/api/tags", jwtCheck, require("./src/api/routes/private/tags"));
+app.use("/api/content", jwtCheck, require("./src/api/routes/private/content"));
+app.use("/api/content-types", jwtCheck, require("./src/api/routes/private/contentTypes"));
+app.use("/api/render-preview", jwtCheck, require("./src/api/routes/private/preview"));
+app.use("/api/login", require("./src/api/routes/public/login"));
 
 function ignoreFavicon(req, res, next) {
     if (req.originalUrl === '/favicon.ico') {

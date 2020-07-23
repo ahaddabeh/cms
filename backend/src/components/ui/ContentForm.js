@@ -2,9 +2,10 @@ import React, { useRef, Fragment, useState, useEffect } from "react";
 import { convertToRaw, Editor, EditorState, RichUtils, convertFromHTML, ContentState, AtomicBlockUtils } from "draft-js";
 import { Link } from "react-router-dom";
 import ReactDOM from "react-dom";
-// import RJSModal from "./Modal";
+import RJSModal from "./Modal";
 import draftToHTML from "draftjs-to-html";
 import ReactModal from "react-modal";
+
 const EditSideBar = (content) => {
     return (<div className="card mt-1">
         <div className="card-body border">
@@ -192,21 +193,10 @@ const ContentForm = (props) => {
 
 
 
-    const rawContentPreview = convertToRaw(editorState.getCurrentContent());
-    const markupPreview = draftToHTML(rawContentPreview);
 
-
-    const [showModal, setShowModal] = useState(false);
-
-    const handleOpenModal = () => {
-        setShowModal(true);
-        console.log("From handleOpenModal", showModal)
-    }
-    const handleCloseModal = () => {
-        setShowModal(false);
-        console.log("From handleCloseModal", showModal)
-    }
     const handlePreview = async () => {
+        const rawContentPreview = convertToRaw(editorState.getCurrentContent());
+        const markupPreview = draftToHTML(rawContentPreview);
         const preview_data = {
             title: titleRef.current.value,
             subtitle: subtitleRef.current.value,
@@ -216,14 +206,7 @@ const ContentForm = (props) => {
         }
         const data = await props.previewContent(preview_data);
         console.log("This is from the content form", data);
-        return (<div>
-            <Link className="btn btn-primary" onClick={handleOpenModal}>Preview</Link>
-            <ReactModal isOpen={showModal} contentLabel="Minimal Modal Example">
-                <Link className="btn btn-primary" onClick={handleCloseModal}>Close Modal</Link>
-                <div dangerouslySetInnerHTML={{ __html: `${data.data}` }} />
-                {console.log("This is from the modal", data.data)}
-            </ReactModal>
-        </div>)
+        return data;
     }
 
 
@@ -333,7 +316,7 @@ const ContentForm = (props) => {
                         <div className="card-body">
                             <form>
                                 <div className="d-flex justify-content-around">
-                                    {}
+                                    <RJSModal previewCallback={handlePreview} />
                                     {/* <div>
                                         <Link className="btn btn-primary" onClick={handleOpenModal}>Preview</Link>
                                         <ReactModal isOpen={showModal} contentLabel="Minimal Modal Example">
